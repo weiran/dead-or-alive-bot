@@ -14,24 +14,24 @@ axios.interceptors.request.use(request => {
 class DeadOrAliveService {
 
     async search(searchTerm) {
-        let searchUrl = wiki.searchEntities({
+        const searchUrl = wiki.searchEntities({
             search: searchTerm,
             format: "json"
         });
 
         // get results for search term
-        let searchResult = await axios.get(searchUrl);
+        const searchResult = await axios.get(searchUrl);
         if (searchResult.data.search.length === 0) {
             return null;
         }
-        let entityIds = searchResult.data.search.map(entity => {
+        const entityIds = searchResult.data.search.map(entity => {
             return entity.id;
         });
         
         // get person entity from search results
-        let entities = await this.getEntities(entityIds);
-        let personEntity = entities.find(entity => {
-            let instanceOfValue = entity.claims.P31[0].mainsnak.datavalue.value.id;
+        const entities = await this.getEntities(entityIds);
+        const personEntity = entities.find(entity => {
+            const instanceOfValue = entity.claims.P31[0].mainsnak.datavalue.value.id;
             return instanceOfValue === "Q5";
         });
         if (!personEntity) {
@@ -39,12 +39,11 @@ class DeadOrAliveService {
         }
 
         // get person info
-        let name = personEntity.labels.en.value;
-        let dateOfBirthString = personEntity.claims.P569[0].mainsnak.datavalue.value.time;
-        let dateOfBirth = moment(dateOfBirthString, "'+'YYYY-MM-DD'T'hh:mm:ss'Z'");
-        let age = moment().diff(dateOfBirth, "years");
-        let isDead = personEntity.claims.P570 !== undefined;
-        let dateOfDeath = null;
+        const name = personEntity.labels.en.value;
+        const dateOfBirthString = personEntity.claims.P569[0].mainsnak.datavalue.value.time;
+        const dateOfBirth = moment(dateOfBirthString, "'+'YYYY-MM-DD'T'hh:mm:ss'Z'");
+        const isDead = personEntity.claims.P570 !== undefined;
+
         let age = null;
         let dateOfDeathFormatted = null;
         if (isDead) {
