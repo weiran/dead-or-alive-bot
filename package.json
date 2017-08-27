@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index"
   },
+  "engines": {
+    "node": "8.2.1"
+  },
   "author": "Weiran Zhang",
   "license": "ISC",
   "dependencies": {
