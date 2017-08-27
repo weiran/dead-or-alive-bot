@@ -66,7 +66,7 @@ class DeadOrAliveService {
     
     async getEntities(entityIds) {
         return Promise.all(entityIds.map(async (entityId) => {
-            let entityUrl = wiki.getEntities(entityId);
+            const entityUrl = wiki.getEntities(entityId);
             return await axios.get(entityUrl)
             .then(entityResult => {
                 return entityResult.data.entities[entityId];
