@@ -20,6 +20,9 @@ class DeadOrAliveService {
         });
 
         let searchResult = await axios.get(searchUrl);
+        if (searchResult.data.search.length === 0) {
+            return null;
+        }
         let entityId = searchResult.data.search[0].id;
         let entityUrl = wiki.getEntities(entityId);
         let entityResult = await axios.get(entityUrl);
