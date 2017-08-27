@@ -2,9 +2,9 @@ const axios = require("axios");
 const qs = require("qs");
 const cheerio = require("cheerio");
 const moment = require("moment");
+const wiki = require("wikidata-sdk");
 
 axios.interceptors.request.use(request => {
-    console.log('Starting Request', request);
     if (request.method === "post" && request.headers["Content-Type"] === "application/x-www-form-urlencoded") {
         request.data = qs.stringify(request.data);
     }
@@ -13,45 +13,39 @@ axios.interceptors.request.use(request => {
 
 class DeadOrAliveService {
 
-    search(searchTerm) {
-        const data = { "displayname": searchTerm };
-        
-        return axios.post("http://www.wa-wd.com/search.asp", data, {
-            "headers": {
-                "Content-Type": "application/x-www-form-urlencoded"
-            }
-        })
-        .then(response => {
-            const html = cheerio.load(response.data);
-
-            const name = html("td.L > a").first().text();
-            if (!name) {
-                return null;
-            }
-
-            const isDead = html("td.L:nth-child(4)").first().text() === "dead";
-            let age = null;
-            if (!isDead) {
-                age = parseInt(html("td.R:nth-child(6)").first().text());
-            } else {
-                let ageText = html("td.R:nth-child(6)").first().text();
-                ageText = ageText.substring(1, ageText.length - 1);
-                age = parseInt(ageText);
-            }
-            
-            const dateDiedText = html("td.R:nth-child(5)").first().text();
-            const dateDied = moment(dateDiedText, "l").format("MMMM Do YYYY");
-
-            return {
-                name: name,
-                isDead: isDead,
-                age: age,
-                dateDied: dateDied
-            };
-        })
-        .catch(result => {
-            console.log(result.response);
+    async search(searchTerm) {
+        let searchUrl = wiki.searchEntities({
+            search: searchTerm,
+            format: "json"
         });
+
+        let searchResult = await axios.get(searchUrl);
+        let entityId = searchResult.data.search[0].id;
+        let entityUrl = wiki.getEntities(entityId);
+        let entityResult = await axios.get(entityUrl);
+
+        let isPerson = entityResult.data.entities[entityId].claims.P31[0].mainsnak.datavalue.value.id === "Q5";
+        if (!isPerson) {
+            return null;
+        }
+
+        let name = entityResult.data.entities[entityId].labels.en.value;
+        let dateOfBirthString = entityResult.data.entities[entityId].claims.P569[0].mainsnak.datavalue.value.time;
+        let dateOfBirth = moment(dateOfBirthString, "'+'YYYY-MM-DD'T'hh:mm:ss'Z'");
+        let age = moment().diff(dateOfBirth, "years");
+        let isDead = entityResult.data.entities[entityId].claims.P570 !== undefined;
+        let dateOfDeath = null;
+        if (isDead) {
+            let dateOfDeathString = entityResult.data.entities[entityId].claims.P570[0].mainsnak.datavalue.value.time;
+            dateOfDeath = moment(dateOfBirthString, "'+'YYYY-MM-DD'T'hh:mm:ss'Z'").format("MMMM Do YYYY");
+        }
+
+        return {
+            name: name,
+            isDead: isDead,
+            age: age,
+            dateOfDeath: dateOfDeath
+        };
     }
 
 }

@@ -17,7 +17,7 @@ bot.on("text", context => {
         let response = null;
 
         if (result && result.isDead) { // dead
-            response = `${result.name} died aged ${result.age} on ${result.dateDied}.`;
+            response = `${result.name} died aged ${result.age} on ${result.dateOfDeath}.`;
         } else if (result && !result.Dead) { // alive
             response = `${result.name} is alive and kicking and ${result.age} years old.`;
         } else { // not found
