@@ -9,7 +9,7 @@ axios.interceptors.request.use(request => {
         request.data = qs.stringify(request.data);
     }
     return request;
-})
+});
 
 class DeadOrAliveService {
 
@@ -19,27 +19,17 @@ class DeadOrAliveService {
             format: "json"
         });
 
+        // get results for search term
         let searchResult = await axios.get(searchUrl);
         if (searchResult.data.search.length === 0) {
             return null;
         }
-
         let entityIds = searchResult.data.search.map(entity => {
             return entity.id;
         });
-
-        async function getEntities(entityIds) {
-            return Promise.all(entityIds.map(async (entityId) => {
-                let entityUrl = wiki.getEntities(entityId);
-                return await axios.get(entityUrl)
-                .then(entityResult => {
-                    return entityResult.data.entities[entityId];
-                });
-            }));
-        }
         
-        let entities = await getEntities(entityIds);
-
+        // get person entity from search results
+        let entities = await this.getEntities(entityIds);
         let personEntity = entities.find(entity => {
             let instanceOfValue = entity.claims.P31[0].mainsnak.datavalue.value.id;
             return instanceOfValue === "Q5";
@@ -48,6 +38,7 @@ class DeadOrAliveService {
             return null;
         }
 
+        // get person info
         let name = personEntity.labels.en.value;
         let dateOfBirthString = personEntity.claims.P569[0].mainsnak.datavalue.value.time;
         let dateOfBirth = moment(dateOfBirthString, "'+'YYYY-MM-DD'T'hh:mm:ss'Z'");
@@ -65,6 +56,16 @@ class DeadOrAliveService {
             age: age,
             dateOfDeath: dateOfDeath
         };
+    }
+    
+    async getEntities(entityIds) {
+        return Promise.all(entityIds.map(async (entityId) => {
+            let entityUrl = wiki.getEntities(entityId);
+            return await axios.get(entityUrl)
+            .then(entityResult => {
+                return entityResult.data.entities[entityId];
+            });
+        }));
     }
 
 }
