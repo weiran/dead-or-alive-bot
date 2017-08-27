@@ -56,7 +56,7 @@ class DeadOrAliveService {
         let dateOfDeath = null;
         if (isDead) {
             let dateOfDeathString = personEntity.claims.P570[0].mainsnak.datavalue.value.time;
-            dateOfDeath = moment(dateOfBirthString, "'+'YYYY-MM-DD'T'hh:mm:ss'Z'").format("MMMM Do YYYY");
+            dateOfDeath = moment(dateOfDeathString, "'+'YYYY-MM-DD'T'hh:mm:ss'Z'").format("MMMM Do YYYY");
         }
 
         return {
