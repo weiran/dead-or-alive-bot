@@ -23,23 +23,39 @@ class DeadOrAliveService {
         if (searchResult.data.search.length === 0) {
             return null;
         }
-        let entityId = searchResult.data.search[0].id;
-        let entityUrl = wiki.getEntities(entityId);
-        let entityResult = await axios.get(entityUrl);
 
-        let isPerson = entityResult.data.entities[entityId].claims.P31[0].mainsnak.datavalue.value.id === "Q5";
-        if (!isPerson) {
+        let entityIds = searchResult.data.search.map(entity => {
+            return entity.id;
+        });
+
+        async function getEntities(entityIds) {
+            return Promise.all(entityIds.map(async (entityId) => {
+                let entityUrl = wiki.getEntities(entityId);
+                return await axios.get(entityUrl)
+                .then(entityResult => {
+                    return entityResult.data.entities[entityId];
+                });
+            }));
+        }
+        
+        let entities = await getEntities(entityIds);
+
+        let personEntity = entities.find(entity => {
+            let instanceOfValue = entity.claims.P31[0].mainsnak.datavalue.value.id;
+            return instanceOfValue === "Q5";
+        });
+        if (!personEntity) {
             return null;
         }
 
-        let name = entityResult.data.entities[entityId].labels.en.value;
-        let dateOfBirthString = entityResult.data.entities[entityId].claims.P569[0].mainsnak.datavalue.value.time;
+        let name = personEntity.labels.en.value;
+        let dateOfBirthString = personEntity.claims.P569[0].mainsnak.datavalue.value.time;
         let dateOfBirth = moment(dateOfBirthString, "'+'YYYY-MM-DD'T'hh:mm:ss'Z'");
         let age = moment().diff(dateOfBirth, "years");
-        let isDead = entityResult.data.entities[entityId].claims.P570 !== undefined;
+        let isDead = personEntity.claims.P570 !== undefined;
         let dateOfDeath = null;
         if (isDead) {
-            let dateOfDeathString = entityResult.data.entities[entityId].claims.P570[0].mainsnak.datavalue.value.time;
+            let dateOfDeathString = personEntity.claims.P570[0].mainsnak.datavalue.value.time;
             dateOfDeath = moment(dateOfBirthString, "'+'YYYY-MM-DD'T'hh:mm:ss'Z'").format("MMMM Do YYYY");
         }
 
