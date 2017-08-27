@@ -1,5 +1,10 @@
-const config = require("./config");
 const Telegraf = require("telegraf");
+
+let config = process.env;
+if (!config.TELEGRAM_TOKEN) {
+    config = require("./config");
+}
+
 const bot = new Telegraf(process.env.TELEGRAM_TOKEN || config.TELEGRAM_TOKEN);
 
 const DeadOrAliveService = require("./DeadOrAliveService");
