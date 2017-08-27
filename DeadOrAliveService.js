@@ -45,16 +45,23 @@ class DeadOrAliveService {
         let age = moment().diff(dateOfBirth, "years");
         let isDead = personEntity.claims.P570 !== undefined;
         let dateOfDeath = null;
+        let age = null;
+        let dateOfDeathFormatted = null;
         if (isDead) {
-            let dateOfDeathString = personEntity.claims.P570[0].mainsnak.datavalue.value.time;
-            dateOfDeath = moment(dateOfDeathString, "'+'YYYY-MM-DD'T'hh:mm:ss'Z'").format("MMMM Do YYYY");
+            const dateOfDeathString = personEntity.claims.P570[0].mainsnak.datavalue.value.time;
+            const dateOfDeath = moment(dateOfDeathString, "'+'YYYY-MM-DD'T'hh:mm:ss'Z'")
+
+            age = dateOfDeath.diff(dateOfBirth, "years");
+            dateOfDeathFormatted = dateOfDeath.format("MMMM Do YYYY");
+        } else {
+            age = moment().diff(dateOfBirth, "years");
         }
 
         return {
             name: name,
             isDead: isDead,
             age: age,
-            dateOfDeath: dateOfDeath
+            dateOfDeath: dateOfDeathFormatted
         };
     }
     
