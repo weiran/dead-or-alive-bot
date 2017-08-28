@@ -12,76 +12,74 @@ axios.interceptors.request.use((request) => {
     return request;
 });
 
-class DeadOrAliveService {
-    constructor() {
-        this.getEntities = async entityIds => Promise.all(entityIds.map(async (entityId) => {
-            const entityUrl = wiki.getEntities(entityId);
-            return axios.get(entityUrl)
-                .then(entityResult => entityResult.data.entities[entityId]);
-        }));
+const parseWikipediaUrl = (title) => {
+    const parsedTitle = title
+        .replace(' ', '_')
+        .replace('(', '%28')
+        .replace(')', '%29');
 
-        this.parseWikipediaUrl = (title) => {
-            const parsedTitle = title
-                .replace(' ', '_')
-                .replace('(', '%28')
-                .replace(')', '%29');
+    return `https://en.wikipedia.org/wiki/${parsedTitle}`;
+};
 
-            return `https://en.wikipedia.org/wiki/${parsedTitle}`;
-        };
+const getEntities = async entityIds => Promise.all(entityIds.map(async (entityId) => {
+    const entityUrl = wiki.getEntities(entityId);
+    const result = await axios.get(entityUrl);
+    return result.data.entities[entityId];
+}));
+
+const search = async (searchTerm) => {
+    const searchUrl = wiki.searchEntities({
+        search: searchTerm,
+        format: 'json',
+    });
+
+    // get results for search term
+    const searchResult = await axios.get(searchUrl);
+    if (searchResult.data.search.length === 0) {
+        return null;
+    }
+    const entityIds = searchResult.data.search.map(entity => entity.id)
+        .slice(0, 5);
+
+    // get person entity from search results
+    const entities = await getEntities(entityIds);
+    const personEntity = entities.find((entity) => {
+        if (entity.claims.P31 === undefined) return null;
+        const instanceOfValue = entity.claims.P31[0].mainsnak.datavalue.value.id;
+        return instanceOfValue === 'Q5';
+    });
+    if (personEntity === undefined || personEntity.sitelinks.enwiki === undefined) {
+        return null;
     }
 
-    async search(searchTerm) {
-        const searchUrl = wiki.searchEntities({
-            search: searchTerm,
-            format: 'json',
-        });
+    // get person info
+    const name = personEntity.labels.en.value;
+    const dateOfBirthString = personEntity.claims.P569[0].mainsnak.datavalue.value.time;
+    const dateOfBirth = moment(dateOfBirthString, WikiDataDateFormat);
+    const isDead = personEntity.claims.P570 !== undefined;
+    const wikipediaUrl = parseWikipediaUrl(personEntity.sitelinks.enwiki.title);
 
-        // get results for search term
-        const searchResult = await axios.get(searchUrl);
-        if (searchResult.data.search.length === 0) {
-            return null;
-        }
-        const entityIds = searchResult.data.search.map(entity => entity.id)
-            .slice(0, 5);
+    let age = null;
+    let dateOfDeathFormatted = null;
+    if (isDead) {
+        const dateOfDeathString = personEntity.claims.P570[0].mainsnak.datavalue.value.time;
+        const dateOfDeath = moment(dateOfDeathString, WikiDataDateFormat);
 
-        // get person entity from search results
-        const entities = await this.getEntities(entityIds);
-        const personEntity = entities.find((entity) => {
-            if (entity.claims.P31 === undefined) return null;
-            const instanceOfValue = entity.claims.P31[0].mainsnak.datavalue.value.id;
-            return instanceOfValue === 'Q5';
-        });
-        if (personEntity === undefined || personEntity.sitelinks.enwiki === undefined) {
-            return null;
-        }
-
-        // get person info
-        const name = personEntity.labels.en.value;
-        const dateOfBirthString = personEntity.claims.P569[0].mainsnak.datavalue.value.time;
-        const dateOfBirth = moment(dateOfBirthString, WikiDataDateFormat);
-        const isDead = personEntity.claims.P570 !== undefined;
-        const wikipediaUrl = this.parseWikipediaUrl(personEntity.sitelinks.enwiki.title);
-
-        let age = null;
-        let dateOfDeathFormatted = null;
-        if (isDead) {
-            const dateOfDeathString = personEntity.claims.P570[0].mainsnak.datavalue.value.time;
-            const dateOfDeath = moment(dateOfDeathString, WikiDataDateFormat);
-
-            age = dateOfDeath.diff(dateOfBirth, 'years');
-            dateOfDeathFormatted = dateOfDeath.format('MMMM Do YYYY');
-        } else {
-            age = moment().diff(dateOfBirth, 'years');
-        }
-
-        return {
-            name,
-            age,
-            isDead,
-            dateOfDeath: dateOfDeathFormatted,
-            wikipediaUrl,
-        };
+        age = dateOfDeath.diff(dateOfBirth, 'years');
+        dateOfDeathFormatted = dateOfDeath.format('MMMM Do YYYY');
+    } else {
+        age = moment().diff(dateOfBirth, 'years');
     }
-}
 
-module.exports = DeadOrAliveService;
+    return {
+        name,
+        age,
+        isDead,
+        dateOfDeath: dateOfDeathFormatted,
+        wikipediaUrl,
+    };
+};
+
+module.exports = {
+    search,
+};

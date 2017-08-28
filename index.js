@@ -22,8 +22,7 @@ bot.on('text', async (context) => {
     }
 
     try {
-        const deadOrAliveService = new DeadOrAliveService();
-        const result = await deadOrAliveService.search(searchTerm);
+        const result = await DeadOrAliveService.search(searchTerm);
         let response = null;
         if (result && result.isDead) { // dead
             response = `[${result.name}](${result.wikipediaUrl}) died aged ${result.age} on ${result.dateOfDeath}.`;
