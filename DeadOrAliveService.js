@@ -38,7 +38,7 @@ class DeadOrAliveService {
             const instanceOfValue = entity.claims.P31[0].mainsnak.datavalue.value.id;
             return instanceOfValue === "Q5";
         });
-        if (!personEntity) {
+        if (personEntity === undefined || personEntity.sitelinks.enwiki === undefined) {
             return null;
         }
 
