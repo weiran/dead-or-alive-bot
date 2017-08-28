@@ -4,7 +4,7 @@ A Telegram bot that searches Wikipedia (via WikiData) for people and informs you
 
 Known as [@dead_or_alive_bot](http://t.me/dead_or_alive_bot) on Telegram.
 
-## Usage
+##Usage
 
 * Via direct message
 * When in a group: `/alive [query]` or `/dead [query]`
@@ -13,7 +13,7 @@ Known as [@dead_or_alive_bot](http://t.me/dead_or_alive_bot) on Telegram.
 
 You need to set your bot's token in one of the following ways:
 
-1. Either include a `config.js` in the root that returns a property for your token:
+1. Either add a `config.js` that returns a property for your token:
 ```
 module.exports = {
     TELEGRAM_TOKEN: "1234567:AAGdsf08sg9897fsdD89fsD"
