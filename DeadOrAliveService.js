@@ -4,6 +4,8 @@ const cheerio = require("cheerio");
 const moment = require("moment");
 const wiki = require("wikidata-sdk");
 
+const WikiDataDateFormat = "'+'YYYY-MM-DD'T'hh:mm:ss'Z'";
+
 axios.interceptors.request.use(request => {
     if (request.method === "post" && request.headers["Content-Type"] === "application/x-www-form-urlencoded") {
         request.data = qs.stringify(request.data);
@@ -42,14 +44,15 @@ class DeadOrAliveService {
         // get person info
         const name = personEntity.labels.en.value;
         const dateOfBirthString = personEntity.claims.P569[0].mainsnak.datavalue.value.time;
-        const dateOfBirth = moment(dateOfBirthString, "'+'YYYY-MM-DD'T'hh:mm:ss'Z'");
+        const dateOfBirth = moment(dateOfBirthString, WikiDataDateFormat);
         const isDead = personEntity.claims.P570 !== undefined;
+        const wikipediaUrl = this.parseWikipediaUrl(personEntity.sitelinks.enwiki.title);
 
         let age = null;
         let dateOfDeathFormatted = null;
         if (isDead) {
             const dateOfDeathString = personEntity.claims.P570[0].mainsnak.datavalue.value.time;
-            const dateOfDeath = moment(dateOfDeathString, "'+'YYYY-MM-DD'T'hh:mm:ss'Z'")
+            const dateOfDeath = moment(dateOfDeathString, WikiDataDateFormat);
 
             age = dateOfDeath.diff(dateOfBirth, "years");
             dateOfDeathFormatted = dateOfDeath.format("MMMM Do YYYY");
