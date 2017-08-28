@@ -66,3 +66,4 @@ typings/
 
 # Config with private token
 config.js
+.vscode

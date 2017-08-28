@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index"
+    "start": "node index",
+    "lint": "eslint ./"
   },
   "engines": {
     "node": "8.2.1"
