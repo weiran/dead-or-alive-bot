@@ -28,7 +28,8 @@ class DeadOrAliveService {
         }
         const entityIds = searchResult.data.search.map(entity => {
             return entity.id;
-        });
+        })
+        .slice(0, 5);
         
         // get person entity from search results
         const entities = await this.getEntities(entityIds);
