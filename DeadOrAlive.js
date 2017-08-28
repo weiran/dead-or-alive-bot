@@ -14,9 +14,9 @@ axios.interceptors.request.use((request) => {
 
 const parseWikipediaUrl = (title) => {
     const parsedTitle = title
-        .replace(' ', '_')
-        .replace('(', '%28')
-        .replace(')', '%29');
+        .replace(/ /g, '_')
+        .replace(/\(/g, '%28')
+        .replace(/\)/g, '%29');
 
     return `https://en.wikipedia.org/wiki/${parsedTitle}`;
 };
