@@ -4,6 +4,7 @@ const moment = require('moment');
 const wiki = require('wikidata-sdk');
 
 const WikiDataDateFormat = "'+'YYYY-MM-DD'T'hh:mm:ss'Z'";
+const DefaultDateFormat = 'MMMM Do YYYY';
 
 axios.interceptors.request.use((request) => {
     if (request.method === 'post' && request.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
@@ -65,7 +66,7 @@ const getPersonModel = (personEntity) => {
         const dateOfDeath = moment(dateOfDeathString, WikiDataDateFormat);
 
         age = dateOfDeath.diff(dateOfBirth, 'years');
-        dateOfDeathFormatted = dateOfDeath.format('MMMM Do YYYY');
+        dateOfDeathFormatted = dateOfDeath.format(DefaultDateFormat);
     } else {
         age = moment().diff(dateOfBirth, 'years');
     }
