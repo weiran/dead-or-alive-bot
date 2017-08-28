@@ -14,7 +14,14 @@ bot.on("text", async context => {
     let searchTerm = message.text;
     if (message.entities !== undefined && message.entities.length > 0) {
         const commandOffset = message.entities[0];
-        searchTerm = searchTerm.substring(commandOffset.offset + commandOffset.length + 1, searchTerm.length);
+        const command = searchTerm.substring(commandOffset.offset, commandOffset.length);
+        if (command == "/dead" || command == "/alive") {
+            // strip out command from message
+            searchTerm = searchTerm.substring(commandOffset.offset + commandOffset.length + 1, searchTerm.length);
+        } else {
+            // ignore all other commands
+            return;
+        }
     }
 
     const deadOrAliveService = new DeadOrAliveService();
