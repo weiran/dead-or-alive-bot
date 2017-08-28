@@ -20,3 +20,15 @@ describe('parseWikipediaUrl', () => {
         expect(output).to.be.equal('https://en.wikipedia.org/wiki/Test_Article_%28disambiguation%29');
     });
 });
+
+describe('getEntities', () => {
+    it('should return an Array of Promises', async () => {
+        DeadOrAlive.axios = {};
+        let output = await DeadOrAlive._private.getEntities(['Q1', 'Q2', 'Q3', 'Q4']);
+        expect(output).to.be.a('Array');
+        expect(output[0]).to.be.a('Object');
+        expect(output[1]).to.be.a('Object');
+        expect(output[2]).to.be.a('Object');
+        expect(output[3]).to.be.a('Object');
+    });
+});
