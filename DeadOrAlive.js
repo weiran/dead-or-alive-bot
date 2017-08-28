@@ -36,7 +36,7 @@ const search = async (searchTerm) => {
     // get results for search term
     const searchResult = await axios.get(searchUrl);
     if (searchResult.data.search.length === 0) {
-        return null;
+        throw new Error('not-found');
     }
     const entityIds = searchResult.data.search.map(entity => entity.id)
         .slice(0, 5);
@@ -49,7 +49,7 @@ const search = async (searchTerm) => {
         return instanceOfValue === 'Q5';
     });
     if (personEntity === undefined || personEntity.sitelinks.enwiki === undefined) {
-        return null;
+        throw new Error('not-found');
     }
 
     // get person info
