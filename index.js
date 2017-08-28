@@ -16,6 +16,7 @@ bot.on("text", context => {
         let commandOffset = message.entities[0];
         searchTerm = searchTerm.substring(commandOffset.offset + commandOffset.length, searchTerm.length - 1);
     }
+    
     const deadOrAliveService = new DeadOrAliveService();
     deadOrAliveService.search(searchTerm)
     .then(result => {
