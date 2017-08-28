@@ -31,6 +31,7 @@ class DeadOrAliveService {
         // get person entity from search results
         const entities = await this.getEntities(entityIds);
         const personEntity = entities.find(entity => {
+            if (entity.claims.P31 === undefined) return null;
             const instanceOfValue = entity.claims.P31[0].mainsnak.datavalue.value.id;
             return instanceOfValue === "Q5";
         });
