@@ -10,10 +10,10 @@ const bot = new Telegraf(process.env.TELEGRAM_TOKEN || config.TELEGRAM_TOKEN);
 const DeadOrAliveService = require("./DeadOrAliveService");
 
 bot.on("text", async context => {
-    let message = context.message;
+    const message = context.message;
     let searchTerm = message.text;
     if (message.entities !== undefined && message.entities.length > 0) {
-        let commandOffset = message.entities[0];
+        const commandOffset = message.entities[0];
         searchTerm = searchTerm.substring(commandOffset.offset + commandOffset.length + 1, searchTerm.length);
     }
 
