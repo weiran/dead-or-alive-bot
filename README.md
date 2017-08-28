@@ -4,10 +4,12 @@ A Telegram bot that searches Wikipedia (via WikiData) for people and informs you
 
 Known as [@dead_or_alive_bot](http://t.me/dead_or_alive_bot) on Telegram.
 
-##Usage
+
+## Usage
 
 * Via direct message
 * When in a group: `/alive [query]` or `/dead [query]`
+
 
 ## Running Development Build
 
