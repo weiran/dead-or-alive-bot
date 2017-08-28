@@ -28,7 +28,7 @@ bot.on('text', async (context) => {
         if (result && result.isDead) { // dead
             response = `[${result.name}](${result.wikipediaUrl}) died aged ${result.age} on ${result.dateOfDeath}.`;
         } else if (result && !result.Dead) { // alive
-            response = `[${result.name}](${result.wikipediaUrl}) is alive and kicking and ${result.age} years old.`;
+            response = `[${result.name}](${result.wikipediaUrl}) is alive and kicking at ${result.age} years old.`;
         } else { // not found
             response = `Couldn't find a person named ${searchTerm}.`;
         }
