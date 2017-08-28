@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const Telegraf = require('telegraf');
-const DeadOrAliveService = require('./DeadOrAliveService');
+const DeadOrAlive = require('./DeadOrAlive');
 
 const bot = new Telegraf(process.env.BOT_TOKEN_DEV);
 
@@ -22,7 +22,7 @@ bot.on('text', async (context) => {
     }
 
     try {
-        const result = await DeadOrAliveService.search(searchTerm);
+        const result = await DeadOrAlive.search(searchTerm);
         let response = null;
         if (result && result.isDead) { // dead
             response = `[${result.name}](${result.wikipediaUrl}) died aged ${result.age} on ${result.dateOfDeath}.`;
