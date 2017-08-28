@@ -17,6 +17,8 @@ const parseTextFromCommand = (text, commandOffset) => {
 bot.on('text', async (context) => {
     const message = context.message;
     let searchTerm = message.text;
+
+    // parse command and input text
     if (message.entities !== undefined && message.entities.length > 0) {
         const commandOffset = message.entities[0];
         const { command, text } = parseTextFromCommand(searchTerm, commandOffset);
@@ -32,11 +34,10 @@ bot.on('text', async (context) => {
         }
     }
 
+    // build response
     let response = `Couldn't find a person named ${searchTerm}.`;
     try {
         const result = await DeadOrAlive.search(searchTerm);
-        if (result === null) return;
-
         switch (result.isDead) {
         case true:
             response = `[${result.name}](${result.wikipediaUrl}) died aged ${result.age} on ${result.dateOfDeath}.`;
