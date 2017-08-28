@@ -62,9 +62,10 @@ class DeadOrAliveService {
 
         return {
             name: name,
-            isDead: isDead,
             age: age,
-            dateOfDeath: dateOfDeathFormatted
+            isDead: isDead,
+            dateOfDeath: dateOfDeathFormatted,
+            wikipediaUrl: wikipediaUrl
         };
     }
     
@@ -76,6 +77,15 @@ class DeadOrAliveService {
                 return entityResult.data.entities[entityId];
             });
         }));
+    }
+
+    parseWikipediaUrl(title) {
+        const parsedTitle = title
+            .replace(" ", "_")
+            .replace("(", "%28")
+            .replace(")", "%29");
+
+        return `https://en.wikipedia.org/wiki/${parsedTitle}`;
     }
 
 }
