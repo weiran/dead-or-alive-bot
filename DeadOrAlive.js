@@ -76,7 +76,7 @@ const search = async (searchTerm) => {
         age,
         isDead,
         dateOfDeath: dateOfDeathFormatted,
-        wikipediaUrl,
+        wikipediaUrl
     };
 };
 
@@ -84,6 +84,6 @@ module.exports = {
     search,
     _private: {
         parseWikipediaUrl,
-        getEntities,
+        getEntities
     },
 };
