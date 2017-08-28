@@ -82,4 +82,8 @@ const search = async (searchTerm) => {
 
 module.exports = {
     search,
+    _private: {
+        parseWikipediaUrl,
+        getEntities,
+    },
 };
