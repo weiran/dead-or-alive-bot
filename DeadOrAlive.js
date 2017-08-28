@@ -27,21 +27,19 @@ const getEntities = async entityIds => Promise.all(entityIds.map(async (entityId
     return result.data.entities[entityId];
 }));
 
-const search = async (searchTerm) => {
-    const searchUrl = wiki.searchEntities({
+const getEntityIds = async (searchTerm) => {
+    const url = wiki.searchEntities({
         search: searchTerm,
         format: 'json',
     });
-
-    // get results for search term
-    const searchResult = await axios.get(searchUrl);
+    const searchResult = await axios.get(url);
     if (searchResult.data.search.length === 0) {
         throw new Error('not-found');
     }
-    const entityIds = searchResult.data.search.map(entity => entity.id)
-        .slice(0, 5);
+    return searchResult.data.search.map(entity => entity.id).slice(0, 5);
+};
 
-    // get person entity from search results
+const getFirstPersonEntity = async (entityIds) => {
     const entities = await getEntities(entityIds);
     const personEntity = entities.find((entity) => {
         if (entity.claims.P31 === undefined) return null;
@@ -51,8 +49,9 @@ const search = async (searchTerm) => {
     if (personEntity === undefined || personEntity.sitelinks.enwiki === undefined) {
         throw new Error('not-found');
     }
+};
 
-    // get person info
+const getPersonModel = (personEntity) => {
     const name = personEntity.labels.en.value;
     const dateOfBirthString = personEntity.claims.P569[0].mainsnak.datavalue.value.time;
     const dateOfBirth = moment(dateOfBirthString, WikiDataDateFormat);
@@ -80,10 +79,19 @@ const search = async (searchTerm) => {
     };
 };
 
+const search = async (searchTerm) => {
+    const entityIds = await getEntityIds(searchTerm);
+    const personEntity = await getFirstPersonEntity(entityIds);
+    return getPersonModel(personEntity);
+};
+
 module.exports = {
     search,
     _private: {
         parseWikipediaUrl,
-        getEntities
+        getEntities,
+        getEntityIds,
+        getFirstPersonEntity,
+        getPersonModel
     },
 };
