@@ -1,0 +1,19 @@
+{
+    "entities": {
+        "Q1": {
+            "claims": {
+                "P31": [
+                    {
+                        "mainsnak": {
+                            "datavalue": {
+                                "value": {
+                                    "id": "Q5"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

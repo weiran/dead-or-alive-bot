@@ -1,5 +1,7 @@
 const { describe, it } = require('mocha');
 const chai = require('chai');
+const moxios = require('moxios');
+const fs = require('fs-extra');
 const DeadOrAlive = require('./../DeadOrAlive');
 
 const expect = chai.expect;
@@ -22,13 +24,26 @@ describe('parseWikipediaUrl', () => {
 });
 
 describe('getEntities', () => {
-    it('should return an Array of Promises', async () => {
-        DeadOrAlive.axios = {};
-        let output = await DeadOrAlive._private.getEntities(['Q1', 'Q2', 'Q3', 'Q4']);
-        expect(output).to.be.a('Array');
-        expect(output[0]).to.be.a('Object');
-        expect(output[1]).to.be.a('Object');
-        expect(output[2]).to.be.a('Object');
-        expect(output[3]).to.be.a('Object');
+    before(async () => {
+        let file = await fs.readFile('./tests/entityResponse.json');
+        entityResponse = JSON.parse(file);
+    });
+
+    let entityResponse = null;
+
+    beforeEach(() => moxios.install(DeadOrAlive.axios));
+    afterEach(() => moxios.uninstall(DeadOrAlive.axios));
+
+    it('should make a network request', (done) => {
+        let output = DeadOrAlive._private.getEntities(['Q1', 'Q2', 'Q3', 'Q4']);
+        moxios.wait(async () => {
+            expect(moxios.requests.count()).to.be.equal(4);
+            const request = moxios.requests.mostRecent();
+            await request.respondWith({ 
+                status: 200,
+                response: entityResponse
+            });
+            done();
+        });
     });
 });
