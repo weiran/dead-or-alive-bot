@@ -49,6 +49,7 @@ const getFirstHumanEntity = async (entities) => {
     if (personEntity === undefined || personEntity.sitelinks.enwiki === undefined) {
         throw new Error('not-found');
     }
+    return personEntity;
 };
 
 const getResultModel = (personEntity) => {
