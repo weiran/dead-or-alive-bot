@@ -6,7 +6,8 @@
   "scripts": {
     "start": "micro-bot -d ${NOW_URL}",
     "debug": "node index-debug",
-    "lint": "eslint ./"
+    "lint": "eslint ./",
+    "test": "mocha tests/."
   },
   "engines": {
     "node": "8.2.1"
