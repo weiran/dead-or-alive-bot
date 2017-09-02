@@ -75,6 +75,21 @@ describe('getEntities', () => {
             done();
         });
     });
+
+    it('should return an array after resolving', (done) => {
+        let output = DeadOrAlive._private.getEntities(['Q1']);
+        moxios.wait(async () => {
+            const request = moxios.requests.mostRecent();
+            await request.respondWith({ 
+                status: 200,
+                response: entityResponse
+            });
+        });
+        output.then(entities => {
+            expect(entities).to.be.an('array');
+            done();
+        });
+    });
 });
 
 describe('getEntityIds', () => {

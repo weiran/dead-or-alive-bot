@@ -40,7 +40,7 @@ const getEntity = async (entityId) => {
     return result.data.entities[entityId];
 };
 
-const getEntities = async entityIds => Promise.all(entityIds.map(entityId => getEntity(entityId)));
+const getEntities = entityIds => Promise.all(entityIds.map(entityId => getEntity(entityId)));
 
 const getFirstHumanEntity = async (entities) => {
     const personEntity = entities.find((entity) => {
