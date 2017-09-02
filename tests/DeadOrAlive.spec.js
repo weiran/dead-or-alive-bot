@@ -49,11 +49,11 @@ describe('getEntity', () => {
                 status: 200,
                 response: entityResponse
             });
-            output.then(entity => {
-                expect(entity).to.be.a('object');
-                expect(entity.claims).to.have.property("P31");
-                done();
-            });
+        });
+        output.then(entity => {
+            expect(entity).to.be.a('object');
+            expect(entity.claims).to.have.property("P31");
+            done();
         });
     });
 });
