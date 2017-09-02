@@ -47,23 +47,3 @@ describe('getEntities', () => {
         });
     });
 });
-
-describe('getEntityIds', () => {
-    let entitiesResponse = null;
-
-    beforeEach(() => moxios.install(DeadOrAlive.axios));
-    afterEach(() => moxios.uninstall(DeadOrAlive.axios));
-
-    it('should make a network request', (done) => {
-        let output = DeadOrAlive._private.getEntities(['Q1', 'Q2', 'Q3', 'Q4']);
-        moxios.wait(async () => {
-            expect(moxios.requests.count()).to.be.equal(4);
-            const request = moxios.requests.mostRecent();
-            await request.respondWith({ 
-                status: 200,
-                response: entityResponse
-            });
-            done();
-        });
-    });
-});
