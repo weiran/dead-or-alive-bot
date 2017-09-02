@@ -38,11 +38,51 @@ describe('getEntities', () => {
         let output = DeadOrAlive._private.getEntities(['Q1', 'Q2', 'Q3', 'Q4']);
         moxios.wait(async () => {
             expect(moxios.requests.count()).to.be.equal(4);
+            done();
+        });
+    });
+});
+
+describe('getEntityIds', () => {
+    before(async () => {
+        let file = await fs.readFile('./tests/entitiesResponse.json');
+        entitiesResponse = JSON.parse(file);
+    });
+
+    let entitiesResponse = null;
+
+    beforeEach(() => moxios.install(DeadOrAlive.axios));
+    afterEach(() => moxios.uninstall(DeadOrAlive.axios));
+
+    it('should make a network request', (done) => {
+        let output = DeadOrAlive._private.getEntityIds("search term");
+        moxios.wait(async () => {
+            expect(moxios.requests.count()).to.be.equal(1);
             const request = moxios.requests.mostRecent();
             await request.respondWith({ 
                 status: 200,
-                response: entityResponse
+                response: entitiesResponse
             });
+            done();
+        });
+    });
+
+    it('should return an array of entity IDs', (done) => {
+        let output = DeadOrAlive._private.getEntityIds("search term");
+        moxios.wait(async () => {
+            const request = moxios.requests.mostRecent();
+            await request.respondWith({ 
+                status: 200,
+                response: entitiesResponse
+            });
+        });
+        output.then(entityIds => {
+            expect(entityIds.length).to.be.equal(5);
+            expect(entityIds[0]).to.be.equal("Q1");
+            expect(entityIds[1]).to.be.equal("Q2");
+            expect(entityIds[2]).to.be.equal("Q3");
+            expect(entityIds[3]).to.be.equal("Q4");
+            expect(entityIds[4]).to.be.equal("Q6");
             done();
         });
     });
