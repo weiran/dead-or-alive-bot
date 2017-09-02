@@ -5,7 +5,7 @@
     <br>
 </h1>
 
-A Telegram bot that searches Wikipedia (via WikiData) for people and informs you if they're dead or alive.
+A Telegram bot that searches Wikipedia (via WikiData) for people and informs you if they're dead or alive. Inspired by [@roguehousewife](https://twitter.com/roguehousewife)'s inability to remember if any celebrity is dead or alive.
 
 Known as [@dead_or_alive_bot](http://t.me/dead_or_alive_bot) on Telegram.
 
