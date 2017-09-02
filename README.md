@@ -12,20 +12,20 @@ Known as [@dead_or_alive_bot](http://t.me/dead_or_alive_bot) on Telegram.
 
 ## Usage
 
-* Via direct message
-* When in a group: `/alive [query]` or `/dead [query]`
+* Query via direct message
+* When invited in a group: `/alive [query]` or `/dead [query]`
 
 
-## Running Development Build
+## Running & Debugging
 
 You need to set your bot's token in one of the following ways:
 
-1. Either add a `config.js` that returns a property for your token:
+1. Either add an `.env` file that sets your Telegram tokens:
 ```
-module.exports = {
-    TELEGRAM_TOKEN: "1234567:AAGdsf08sg9897fsdD89fsD"
-};
+BOT_TOKEN=1234567:AAGdsf08sg9897fsdD89fsD
+BOT_TOKEN_DEV=1234567:AAGdsf08sg9897fsdD89fsD
 ```
-2. Or set an environment variable called `BOT_TOKEN` (can be done in a `.env` file).
 
-Then run `node index`.
+2. Or set `BOT_TOKEN` and `BOT_TOKEN_DEV` as environment variables.
+
+Then run `node index` to debug, or `micro-bot` to run in production.
