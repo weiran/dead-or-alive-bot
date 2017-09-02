@@ -22,12 +22,6 @@ const parseWikipediaUrl = (title) => {
     return `https://en.wikipedia.org/wiki/${parsedTitle}`;
 };
 
-const getEntities = async entityIds => Promise.all(entityIds.map(async (entityId) => {
-    const entityUrl = wiki.getEntities(entityId);
-    const result = await axios.get(entityUrl);
-    return result.data.entities[entityId];
-}));
-
 const getEntityIds = async (searchTerm) => {
     const url = wiki.searchEntities({
         search: searchTerm,
@@ -39,6 +33,12 @@ const getEntityIds = async (searchTerm) => {
     }
     return searchResult.data.search.map(entity => entity.id).slice(0, 5);
 };
+
+const getEntities = async entityIds => Promise.all(entityIds.map(async (entityId) => {
+    const entityUrl = wiki.getEntities(entityId);
+    const result = await axios.get(entityUrl);
+    return result.data.entities[entityId];
+}));
 
 const getFirstHumanEntity = async (entities) => {
     const personEntity = entities.find((entity) => {
