@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
+    "start": "micro-bot -d ${NOW_URL}",
     "debug": "node index-debug",
     "lint": "eslint ./"
   },
