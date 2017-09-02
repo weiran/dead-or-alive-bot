@@ -1,4 +1,9 @@
-# Dead or Alive Bot
+<h1 align="center">
+    <img src="https://raw.githubusercontent.com/weiran/dead-or-alive-bot/master/logo.png" alt="dead or alive bot" title="dead-or-alive-bot" width="200">
+    <br>
+    Dead or Alive Bot
+    <br>
+</h1>
 
 A Telegram bot that searches Wikipedia (via WikiData) for people and informs you if they're dead or alive.
 
