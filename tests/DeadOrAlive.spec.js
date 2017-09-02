@@ -23,6 +23,41 @@ describe('parseWikipediaUrl', () => {
     });
 });
 
+describe('getEntity', () => {
+    before(async () => {
+        let file = await fs.readFile('./tests/entityResponse.json');
+        entityResponse = JSON.parse(file);
+    });
+
+    let entityResponse = null;
+    beforeEach(() => moxios.install(DeadOrAlive.axios));
+    afterEach(() => moxios.uninstall(DeadOrAlive.axios));
+
+    it('should make 1 network request', (done) => {
+        let output = DeadOrAlive._private.getEntity("Q1");
+        moxios.wait(async () => {
+            expect(moxios.requests.count()).to.be.equal(1);
+            done();
+        });
+    });
+
+    it('should return the correct entity', (done) => {
+        let output = DeadOrAlive._private.getEntity("Q1");
+        moxios.wait(async () => {
+            const request = moxios.requests.mostRecent();
+            await request.respondWith({ 
+                status: 200,
+                response: entityResponse
+            });
+            output.then(entity => {
+                expect(entity).to.be.a('object');
+                expect(entity.claims).to.have.property("P31");
+                done();
+            });
+        });
+    });
+});
+
 describe('getEntities', () => {
     before(async () => {
         let file = await fs.readFile('./tests/entityResponse.json');
@@ -30,7 +65,6 @@ describe('getEntities', () => {
     });
 
     let entityResponse = null;
-
     beforeEach(() => moxios.install(DeadOrAlive.axios));
     afterEach(() => moxios.uninstall(DeadOrAlive.axios));
 
@@ -58,11 +92,6 @@ describe('getEntityIds', () => {
         let output = DeadOrAlive._private.getEntityIds("search term");
         moxios.wait(async () => {
             expect(moxios.requests.count()).to.be.equal(1);
-            const request = moxios.requests.mostRecent();
-            await request.respondWith({ 
-                status: 200,
-                response: entitiesResponse
-            });
             done();
         });
     });
