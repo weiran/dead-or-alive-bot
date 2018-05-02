@@ -19,6 +19,11 @@ Known as [@dead_or_alive_bot](http://t.me/dead_or_alive_bot) on Telegram.
 * Query via direct message
 * When invited in a group: `/alive [query]` or `/dead [query]`
 
+## Creating your bot
+
+To run or debug this bot, you'll need to create a bot of your own using [telegram's own bot, botfather](https://core.telegram.org/bots#3-how-do-i-create-a-bot).
+
+This will provide you with a token which can be used to access the bot.
 
 ## Running & Debugging
 
@@ -32,4 +37,21 @@ BOT_TOKEN_DEV=1234567:AAGdsf08sg9897fsdD89fsD
 
 2. Or set `BOT_TOKEN` and `BOT_TOKEN_DEV` as environment variables.
 
-Then run `node index` to debug, or `micro-bot` to run in production.
+Then run either:
+- `npm run debug` - debug the bot locally.
+- `npm run start` - run the bot in production.
+> note - production requires the `NOW_URL` env var to be configured
+
+## FAQ
+
+<details>
+    <summary>
+        I'm receiving 401 responses when debugging!
+    </summary>
+    
+    Sometimes the token provided by the botfather is incorrect, even when first creating the bot.
+
+    If you're getting 401 responses, usually this is fixed by trashing the old token and using the fresh one generated.
+
+    > note - bot tokens can be managed by running the command `/mybots` within botfather.
+</details>
