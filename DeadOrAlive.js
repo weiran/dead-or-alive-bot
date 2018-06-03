@@ -55,27 +55,37 @@ const getFirstHumanEntity = async (entities) => {
 };
 
 const getResultModel = (personEntity) => {
+    const {
+        P569: birthData,
+        P570: deathData
+    } = personEntity.claims;
     const name = personEntity.labels.en.value;
-    const dateOfBirthString = personEntity.claims.P569[0].mainsnak.datavalue.value.time;
-    const dateOfBirth = moment(dateOfBirthString, WikiDataDateFormat);
-    const isDead = personEntity.claims.P570 !== undefined;
     const wikipediaUrl = parseWikipediaUrl(personEntity.sitelinks.enwiki.title);
+    const hasDOB = birthData !== undefined;
+    const isDead = deathData !== undefined;
 
+    let dateOfBirthString;
+    let dateOfBirth;
     let age = null;
+    if (hasDOB) {
+        dateOfBirthString = birthData[0].mainsnak.datavalue.value.time;
+        dateOfBirth = moment(dateOfBirthString, WikiDataDateFormat);
+        age = moment().diff(dateOfBirth, 'years');
+    }
+
     let dateOfDeathFormatted = null;
     if (isDead) {
-        const dateOfDeathString = personEntity.claims.P570[0].mainsnak.datavalue.value.time;
+        const dateOfDeathString = deathData[0].mainsnak.datavalue.value.time;
         const dateOfDeath = moment(dateOfDeathString, WikiDataDateFormat);
 
         age = dateOfDeath.diff(dateOfBirth, 'years');
         dateOfDeathFormatted = dateOfDeath.format(DefaultDateFormat);
-    } else {
-        age = moment().diff(dateOfBirth, 'years');
     }
 
     return {
         name,
         age,
+        hasDOB,
         isDead,
         dateOfDeath: dateOfDeathFormatted,
         wikipediaUrl
