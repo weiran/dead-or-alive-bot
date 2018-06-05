@@ -104,7 +104,7 @@ const getResultModel = (wikipediaModel) => {
         age = dateOfDeath.diff(dateOfBirth, 'years');
         dateOfDeathFormatted = dateOfDeath.format(DefaultDateFormat);
     }
-    
+
     return {
         name: wikipediaModel.name,
         age,
