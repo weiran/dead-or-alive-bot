@@ -3,6 +3,8 @@ const qs = require('qs');
 const moment = require('moment');
 const wiki = require('wikidata-sdk');
 
+const overrides = require('./Overrides');
+
 const WikiDataDateFormat = "'+'YYYY-MM-DD'T'hh:mm:ss'Z'";
 const DefaultDateFormat = 'MMMM Do YYYY';
 
@@ -54,49 +56,78 @@ const getFirstHumanEntity = async (entities) => {
     return personEntity;
 };
 
-const getResultModel = (personEntity) => {
+const getWikipediaModel = (personEntity) => {
     const {
         P569: birthData,
         P570: deathData
     } = personEntity.claims;
+
     const name = personEntity.labels.en.value;
     const wikipediaUrl = parseWikipediaUrl(personEntity.sitelinks.enwiki.title);
     const hasDOB = birthData !== undefined;
     const isDead = deathData !== undefined;
 
-    let dateOfBirthString;
     let dateOfBirth;
-    let age = null;
     if (hasDOB) {
-        dateOfBirthString = birthData[0].mainsnak.datavalue.value.time;
-        dateOfBirth = moment(dateOfBirthString, WikiDataDateFormat);
-        age = moment().diff(dateOfBirth, 'years');
+        const dateOfBirthString = birthData[0].mainsnak.datavalue.value.time;
+        dateOfBirth = moment(dateOfBirthString, WikiDataDateFormat).toDate();
     }
 
-    let dateOfDeathFormatted = null;
+    let dateOfDeath;
     if (isDead) {
         const dateOfDeathString = deathData[0].mainsnak.datavalue.value.time;
-        const dateOfDeath = moment(dateOfDeathString, WikiDataDateFormat);
-
-        age = dateOfDeath.diff(dateOfBirth, 'years');
-        dateOfDeathFormatted = dateOfDeath.format(DefaultDateFormat);
+        dateOfDeath = moment(dateOfDeathString, WikiDataDateFormat).toDate();
     }
 
     return {
         name,
-        age,
-        hasDOB,
-        isDead,
-        dateOfDeath: dateOfDeathFormatted,
+        dateOfBirth,
+        dateOfDeath,
         wikipediaUrl
     };
 };
 
+const getResultModel = (wikipediaModel) => {
+    const hasDOB = wikipediaModel.dateOfBirth !== undefined;
+    const isDead = wikipediaModel.dateOfDeath !== undefined;
+    let age;
+    let dateOfDeathFormatted;
+
+    if (hasDOB) {
+        const dateOfBirth = moment(wikipediaModel.dateOfBirth);
+        age = moment().diff(dateOfBirth, 'years');
+    }
+
+    if (isDead) {
+        const dateOfDeath = moment(wikipediaModel.dateOfDeath);
+        const dateOfBirth = moment(wikipediaModel.dateOfBirth);
+        age = dateOfDeath.diff(dateOfBirth, 'years');
+        dateOfDeathFormatted = dateOfDeath.format(DefaultDateFormat);
+    }
+    
+    return {
+        name: wikipediaModel.name,
+        age,
+        hasDOB,
+        isDead,
+        dateOfDeath: dateOfDeathFormatted,
+        wikipediaUrl: wikipediaModel.wikipediaUrl
+    };
+};
+
 const search = async (searchTerm) => {
+    // search for override terms first
+    const overrideModel =
+        overrides.find(override => searchTerm.toLowerCase() === override.overrideSearchTerm);
+    if (overrideModel) {
+        return getResultModel(overrideModel);
+    }
+
     const entityIds = await getEntityIds(searchTerm);
     const entities = await getEntities(entityIds);
     const personEntity = await getFirstHumanEntity(entities);
-    return getResultModel(personEntity);
+    const wikipediaModel = await getWikipediaModel(personEntity);
+    return getResultModel(wikipediaModel);
 };
 
 module.exports = {
