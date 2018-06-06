@@ -88,21 +88,19 @@ const getWikipediaModel = (personEntity) => {
 };
 
 const getResultModel = (wikipediaModel) => {
-    const hasDOB = wikipediaModel.dateOfBirth !== undefined;
-    const isDead = wikipediaModel.dateOfDeath !== undefined;
+    const hasDOB = wikipediaModel.dateOfBirth !== null;
+    const isDead = wikipediaModel.dateOfDeath !== null;
     let age;
-    let dateOfDeathFormatted;
+    let dateOfDeathFormatted = null;
 
     if (hasDOB) {
         const dateOfBirth = moment(wikipediaModel.dateOfBirth);
         age = moment().diff(dateOfBirth, 'years');
-    }
-
-    if (isDead) {
-        const dateOfDeath = moment(wikipediaModel.dateOfDeath);
-        const dateOfBirth = moment(wikipediaModel.dateOfBirth);
-        age = dateOfDeath.diff(dateOfBirth, 'years');
-        dateOfDeathFormatted = dateOfDeath.format(DefaultDateFormat);
+        if (isDead) {
+            const dateOfDeath = moment(wikipediaModel.dateOfDeath);
+            age = dateOfDeath.diff(dateOfBirth, 'years');
+            dateOfDeathFormatted = dateOfDeath.format(DefaultDateFormat);
+        }
     }
 
     return {
