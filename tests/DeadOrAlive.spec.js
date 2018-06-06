@@ -187,5 +187,45 @@ describe('getWikipediaModel', () => {
 });
 
 describe('getResultModel', () => {
+    let resultModelInput = {
+        name: 'John Lennon',
+        dateOfBirth: new Date(Date.UTC(1975, 2, 17)),
+        dateOfDeath: new Date(Date.UTC(2009, 2, 13)),
+        wikipediaUrl: 'https://en.wikipedia.org/wiki/John_Lennon'
+    };
 
+    it('should return result model with correct age given birth and death dates exist', () => {
+        const resultModel = DeadOrAlive._private.getResultModel(resultModelInput);
+        expect(resultModel.age).to.be.equal(33);
+        expect(resultModel.hasDOB).to.be.equal(true);
+        expect(resultModel.isDead).to.be.equal(true);
+        expect(resultModel.dateOfDeath).to.be.equal('March 13th 2009');
+    })
+
+    it('should return result model with correct age given birth date exist', () => {
+        let resultModelInputWithoutDeath = Object.assign({}, resultModelInput);;
+        resultModelInputWithoutDeath.dateOfDeath = null;
+        const resultModel = DeadOrAlive._private.getResultModel(resultModelInputWithoutDeath);
+        // TODO: inject a date for 'today' to calculate age statically
+        expect(resultModel.age).to.be.equal(43);
+        expect(resultModel.hasDOB).to.be.equal(true);
+        expect(resultModel.isDead).to.be.equal(false);
+        expect(resultModel.dateOfDeath).to.be.equal(null);
+    })
+
+    it('should return results model without age when date of birth is null', () => {
+        let resultModelInputWithoutBirthDate = Object.assign({}, resultModelInput);
+        resultModelInputWithoutBirthDate.dateOfBirth = null;
+        const resultModel = DeadOrAlive._private.getResultModel(resultModelInputWithoutBirthDate);
+        expect(resultModel.age).to.be.equal(undefined);
+        expect(resultModel.hasDOB).to.be.equal(false);
+        expect(resultModel.isDead).to.be.equal(true);
+        expect(resultModel.dateOfDeath).to.be.equal(null);
+    })
+
+    it('should copy the right values into the result model', () => {
+        const resultModel = DeadOrAlive._private.getResultModel(resultModelInput);
+        expect(resultModel.name, 'John Lennon');
+        expect(resultModel.wikipediaUrl, 'https://en.wikipedia.org/wiki/John_Lennon');
+    })
 });
