@@ -1,7 +1,7 @@
 {
   "name": "dead-or-alive-bot",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.1.0",
+  "description": "Telegram bot that tells you whether someone is dead or alive.",
   "main": "index.js",
   "scripts": {
     "start": "micro-bot -d ${NOW_URL}",
