@@ -67,13 +67,13 @@ const getWikipediaModel = (personEntity) => {
     const hasDOB = birthData !== undefined;
     const isDead = deathData !== undefined;
 
-    let dateOfBirth;
+    let dateOfBirth = null;
     if (hasDOB) {
         const dateOfBirthString = birthData[0].mainsnak.datavalue.value.time;
         dateOfBirth = moment(dateOfBirthString, WikiDataDateFormat).toDate();
     }
 
-    let dateOfDeath;
+    let dateOfDeath = null;
     if (isDead) {
         const dateOfDeathString = deathData[0].mainsnak.datavalue.value.time;
         dateOfDeath = moment(dateOfDeathString, WikiDataDateFormat).toDate();
@@ -124,7 +124,7 @@ const search = async (searchTerm) => {
     const entityIds = await getEntityIds(searchTerm);
     const entities = await getEntities(entityIds);
     const personEntity = getFirstHumanEntity(entities);
-    const wikipediaModel = await getWikipediaModel(personEntity);
+    const wikipediaModel = getWikipediaModel(personEntity);
     return getResultModel(wikipediaModel);
 };
 

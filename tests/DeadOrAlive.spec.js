@@ -130,6 +130,7 @@ describe('getEntityIds', () => {
             done();
         });
     });
+});
 
 describe('getFirstHumanEntity', () => {
     before(async () => {
@@ -139,34 +140,57 @@ describe('getFirstHumanEntity', () => {
 
     let getHumanEntitiesInput;
     
-    it('should return person entity if it exists', (done) => {
+    it('should return person entity if it exists', () => {
         const output = DeadOrAlive._private.getFirstHumanEntity(getHumanEntitiesInput.entities);
         expect(output === getHumanEntitiesInput.entities[0]);
-        done();
     });
 
-    it('should throw error if person entity not found', (done) => {
+    it('should throw error if person entity not found', () => {
         const entitiesWithoutHuman = getHumanEntitiesInput.entities.splice(1, getHumanEntitiesInput.entities - 1);
         expect(() => 
             DeadOrAlive._private.getFirstHumanEntity(entitiesWithoutHuman)
         ).to.throw();
-        done();
     });
 
-    it('should throw error if person entity doesn\'t have an English Wikipedia link', (done) => {
+    it('should throw error if person entity doesn\'t have an English Wikipedia link', () => {
         const entitiesHumanWithoutWikipediaLink = getHumanEntitiesInput.entities;
         delete entitiesHumanWithoutWikipediaLink[0].sitelinks.enwiki;
         expect(() => 
             DeadOrAlive._private.getFirstHumanEntity(entitiesHumanWithoutWikipediaLink)
         ).to.throw();
-        done();
     });
 });
 
 describe('getWikipediaModel', () => {
+    before(async () => {
+        const file = await fs.readFile('./tests/getWikipediaModelInput.json');
+        wikipediaModelInput = JSON.parse(file);
+    });
+
+    let wikipediaModelInput;
+
+    it('should return wikipedia model given a valid input', () => {
+        const wikipediaModel = DeadOrAlive._private.getWikipediaModel(wikipediaModelInput);
+        expect(wikipediaModel.name, 'John Lennon');
+        expect(wikipediaModel.dateOfBirth, new Date(1975, 2, 17));
+        expect(wikipediaModel.dateOfDeath, new Date(2009, 2, 13));
+        expect(wikipediaModel.wikipediaUrl, 'https://en.wikipedia.org/wiki/John_Lennon');
+    });
+
+    it('should return wikipedia model with missing dates given a partially valid input', () => {
+        const wikipediaModelInputWithoutDates = wikipediaModelInput;
+        delete wikipediaModelInputWithoutDates.claims.P569;
+        delete wikipediaModelInputWithoutDates.claims.P570;
+
+        const wikipediaModel = DeadOrAlive._private.getWikipediaModel(wikipediaModelInputWithoutDates);
+
+        expect(wikipediaModel.name, 'John Lennon');
+        expect(wikipediaModel.dateOfBirth, null);
+        expect(wikipediaModel.dateOfDeath, null);
+        expect(wikipediaModel.wikipediaUrl, 'https://en.wikipedia.org/wiki/John_Lennon');
+    });
 });
 
 describe('getResultModel', () => {
 
-});
 });
