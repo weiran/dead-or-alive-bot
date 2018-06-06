@@ -130,4 +130,43 @@ describe('getEntityIds', () => {
             done();
         });
     });
+
+describe('getFirstHumanEntity', () => {
+    before(async () => {
+        const file = await fs.readFile('./tests/getHumanEntitiesInput.json');
+        getHumanEntitiesInput = JSON.parse(file);
+    });
+
+    let getHumanEntitiesInput;
+    
+    it('should return person entity if it exists', (done) => {
+        const output = DeadOrAlive._private.getFirstHumanEntity(getHumanEntitiesInput.entities);
+        expect(output === getHumanEntitiesInput.entities[0]);
+        done();
+    });
+
+    it('should throw error if person entity not found', (done) => {
+        const entitiesWithoutHuman = getHumanEntitiesInput.entities.splice(1, getHumanEntitiesInput.entities - 1);
+        expect(() => 
+            DeadOrAlive._private.getFirstHumanEntity(entitiesWithoutHuman)
+        ).to.throw();
+        done();
+    });
+
+    it('should throw error if person entity doesn\'t have an English Wikipedia link', (done) => {
+        const entitiesHumanWithoutWikipediaLink = getHumanEntitiesInput.entities;
+        delete entitiesHumanWithoutWikipediaLink[0].sitelinks.enwiki;
+        expect(() => 
+            DeadOrAlive._private.getFirstHumanEntity(entitiesHumanWithoutWikipediaLink)
+        ).to.throw();
+        done();
+    });
+});
+
+describe('getWikipediaModel', () => {
+});
+
+describe('getResultModel', () => {
+
+});
 });
