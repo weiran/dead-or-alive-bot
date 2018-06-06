@@ -3,6 +3,8 @@ const qs = require('qs');
 const moment = require('moment');
 const wiki = require('wikidata-sdk');
 
+const overrides = require('./Overrides');
+
 const WikiDataDateFormat = "'+'YYYY-MM-DD'T'hh:mm:ss'Z'";
 const DefaultDateFormat = 'MMMM Do YYYY';
 
@@ -42,7 +44,7 @@ const getEntity = async (entityId) => {
 
 const getEntities = entityIds => Promise.all(entityIds.map(entityId => getEntity(entityId)));
 
-const getFirstHumanEntity = async (entities) => {
+const getFirstHumanEntity = (entities) => {
     const personEntity = entities.find((entity) => {
         if (entity.claims.P31 === undefined) return null;
         const instanceOfValue = entity.claims.P31[0].mainsnak.datavalue.value.id;
@@ -54,49 +56,74 @@ const getFirstHumanEntity = async (entities) => {
     return personEntity;
 };
 
-const getResultModel = (personEntity) => {
+const getPersonModel = (personEntity) => {
     const {
         P569: birthData,
         P570: deathData
     } = personEntity.claims;
+
     const name = personEntity.labels.en.value;
-    const wikipediaUrl = parseWikipediaUrl(personEntity.sitelinks.enwiki.title);
+    const url = parseWikipediaUrl(personEntity.sitelinks.enwiki.title);
     const hasDOB = birthData !== undefined;
     const isDead = deathData !== undefined;
 
-    let dateOfBirthString;
-    let dateOfBirth;
-    let age = null;
+    let dateOfBirth = null;
     if (hasDOB) {
-        dateOfBirthString = birthData[0].mainsnak.datavalue.value.time;
-        dateOfBirth = moment(dateOfBirthString, WikiDataDateFormat);
-        age = moment().diff(dateOfBirth, 'years');
+        const dateOfBirthString = birthData[0].mainsnak.datavalue.value.time;
+        dateOfBirth = moment(dateOfBirthString, WikiDataDateFormat).toDate();
     }
 
-    let dateOfDeathFormatted = null;
+    let dateOfDeath = null;
     if (isDead) {
         const dateOfDeathString = deathData[0].mainsnak.datavalue.value.time;
-        const dateOfDeath = moment(dateOfDeathString, WikiDataDateFormat);
-
-        age = dateOfDeath.diff(dateOfBirth, 'years');
-        dateOfDeathFormatted = dateOfDeath.format(DefaultDateFormat);
+        dateOfDeath = moment(dateOfDeathString, WikiDataDateFormat).toDate();
     }
 
     return {
         name,
+        dateOfBirth,
+        dateOfDeath,
+        url
+    };
+};
+
+const getResultModel = (personModel) => {
+    const hasDOB = personModel.dateOfBirth !== null;
+    const isDead = personModel.dateOfDeath !== null;
+    let age;
+    let dateOfDeathFormatted = null;
+
+    if (hasDOB) {
+        const dateOfBirth = moment(personModel.dateOfBirth);
+        age = moment().diff(dateOfBirth, 'years');
+        if (isDead) {
+            const dateOfDeath = moment(personModel.dateOfDeath);
+            age = dateOfDeath.diff(dateOfBirth, 'years');
+            dateOfDeathFormatted = dateOfDeath.format(DefaultDateFormat);
+        }
+    }
+
+    return {
+        name: personModel.name,
         age,
         hasDOB,
         isDead,
         dateOfDeath: dateOfDeathFormatted,
-        wikipediaUrl
+        url: personModel.url
     };
 };
 
 const search = async (searchTerm) => {
+    // search for override terms first
+    const overrideModel =
+        overrides.find(override => searchTerm.toLowerCase() === override.overrideSearchTerm);
+    if (overrideModel) return getResultModel(overrideModel);
+
     const entityIds = await getEntityIds(searchTerm);
     const entities = await getEntities(entityIds);
-    const personEntity = await getFirstHumanEntity(entities);
-    return getResultModel(personEntity);
+    const personEntity = getFirstHumanEntity(entities);
+    const wikipediaModel = getPersonModel(personEntity);
+    return getResultModel(wikipediaModel);
 };
 
 module.exports = {
@@ -107,6 +134,7 @@ module.exports = {
         getEntity,
         getEntityIds,
         getFirstHumanEntity,
+        getPersonModel,
         getResultModel
     },
 };

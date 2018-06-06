@@ -35,10 +35,10 @@ const textReceived = async (context) => {
         const result = await DeadOrAlive.search(searchTerm);
         switch (result.isDead) {
         case true:
-            response = `[${result.name}](${result.wikipediaUrl}) died${result.hasDOB ? ` aged ${result.age}` : ''} on ${result.dateOfDeath}.`;
+            response = `[${result.name}](${result.url}) died${result.hasDOB ? ` aged ${result.age}` : ''} on ${result.dateOfDeath}.`;
             break;
         case false:
-            response = `[${result.name}](${result.wikipediaUrl}) is alive${result.hasDOB ? ` and kicking at ${result.age} years old` : ''}.`;
+            response = `[${result.name}](${result.url}) is alive${result.hasDOB ? ` and kicking at ${result.age} years old` : ''}.`;
             break;
         default:
         }

@@ -31,11 +31,10 @@ You need to set your bot's token in one of the following ways:
 
 1. Either add an `.env` file that sets your Telegram tokens:
 ```
-BOT_TOKEN=1234567:AAGdsf08sg9897fsdD89fsD
 BOT_TOKEN_DEV=1234567:AAGdsf08sg9897fsdD89fsD
 ```
 
-2. Or set `BOT_TOKEN` and `BOT_TOKEN_DEV` as environment variables.
+2. Or set `BOT_TOKEN_DEV` as environment variables.
 
 Then run either:
 - `npm run debug` - debug the bot locally.
@@ -54,4 +53,14 @@ Then run either:
     If you're getting 401 responses, usually this is fixed by trashing the old token and using the fresh one generated.
 
     > note - bot tokens can be managed by running the command `/mybots` within botfather.
+</details>
+
+
+<details>
+    <summary>
+        I want to deploy to now
+    </summary>
+    
+    Deploy with your bot token as an environment variable:
+    now -e BOT_TOKEN='1234567:AAGdsf08sg9897fsdD89fsD'
 </details>

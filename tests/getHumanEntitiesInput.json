@@ -1,0 +1,82 @@
+{
+    "entities": [
+        {
+            "claims": {
+                "P31": [
+                    {
+                        "mainsnak": {
+                            "datavalue": {
+                                "value": {
+                                    "id": "Q5"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "sitelinks": {
+                "enwiki": "URL"
+            }
+        },
+        {
+            "claims": {
+                "P31": [
+                    {
+                        "mainsnak": {
+                            "datavalue": {
+                                "value": {
+                                    "id": "Q6"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "claims": {
+                "P31": [
+                    {
+                        "mainsnak": {
+                            "datavalue": {
+                                "value": {
+                                    "id": "Q6"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "claims": {
+                "P31": [
+                    {
+                        "mainsnak": {
+                            "datavalue": {
+                                "value": {
+                                    "id": "Q6"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "claims": {
+                "P31": [
+                    {
+                        "mainsnak": {
+                            "datavalue": {
+                                "value": {
+                                    "id": "Q6"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

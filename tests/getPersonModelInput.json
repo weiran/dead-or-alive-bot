@@ -1,0 +1,47 @@
+{
+    "labels": {
+        "en": {
+            "value": "John Lennon"
+        }
+    },
+    "claims": {
+        "P31": [
+            {
+                "mainsnak": {
+                    "datavalue": {
+                        "value": {
+                            "id": "Q5"
+                        }
+                    }
+                }
+            }
+        ],
+        "P569": [
+            {
+                "mainsnak": {
+                    "datavalue": {
+                        "value": {
+                            "time": "+1975-03-17T00:00:00Z"
+                        }
+                    }
+                }
+            }
+        ],
+        "P570": [
+            {
+                "mainsnak": {
+                    "datavalue": {
+                        "value": {
+                            "time": "+2009-03-13T00:00:00Z"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    "sitelinks": {
+        "enwiki": {
+            "title": "John Lennon"
+        }
+    }
+}
