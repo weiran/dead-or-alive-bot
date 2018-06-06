@@ -25,7 +25,7 @@ describe('parseWikipediaUrl', () => {
 
 describe('getEntity', () => {
     before(async () => {
-        let file = await fs.readFile('./tests/entityResponse.json');
+        const file = await fs.readFile('./tests/entityResponse.json');
         entityResponse = JSON.parse(file);
     });
 
@@ -34,7 +34,7 @@ describe('getEntity', () => {
     afterEach(() => moxios.uninstall(DeadOrAlive.axios));
 
     it('should make 1 network request', (done) => {
-        let output = DeadOrAlive._private.getEntity("Q1");
+        const output = DeadOrAlive._private.getEntity("Q1");
         moxios.wait(async () => {
             expect(moxios.requests.count()).to.be.equal(1);
             done();
@@ -42,7 +42,7 @@ describe('getEntity', () => {
     });
 
     it('should return the correct entity', (done) => {
-        let output = DeadOrAlive._private.getEntity("Q1");
+        const output = DeadOrAlive._private.getEntity("Q1");
         moxios.wait(async () => {
             const request = moxios.requests.mostRecent();
             await request.respondWith({ 
@@ -60,7 +60,7 @@ describe('getEntity', () => {
 
 describe('getEntities', () => {
     before(async () => {
-        let file = await fs.readFile('./tests/entityResponse.json');
+        const file = await fs.readFile('./tests/entityResponse.json');
         entityResponse = JSON.parse(file);
     });
 
@@ -69,7 +69,7 @@ describe('getEntities', () => {
     afterEach(() => moxios.uninstall(DeadOrAlive.axios));
 
     it('should make 4 network requests', (done) => {
-        let output = DeadOrAlive._private.getEntities(['Q1', 'Q2', 'Q3', 'Q4']);
+        const output = DeadOrAlive._private.getEntities(['Q1', 'Q2', 'Q3', 'Q4']);
         moxios.wait(async () => {
             expect(moxios.requests.count()).to.be.equal(4);
             done();
@@ -77,7 +77,7 @@ describe('getEntities', () => {
     });
 
     it('should return an array after resolving', (done) => {
-        let output = DeadOrAlive._private.getEntities(['Q1']);
+        const output = DeadOrAlive._private.getEntities(['Q1']);
         moxios.wait(async () => {
             const request = moxios.requests.mostRecent();
             await request.respondWith({ 
@@ -94,17 +94,17 @@ describe('getEntities', () => {
 
 describe('getEntityIds', () => {
     before(async () => {
-        let file = await fs.readFile('./tests/entitiesResponse.json');
+        const file = await fs.readFile('./tests/entitiesResponse.json');
         entitiesResponse = JSON.parse(file);
     });
 
-    let entitiesResponse = null;
+    let entitiesResponse;
 
     beforeEach(() => moxios.install(DeadOrAlive.axios));
     afterEach(() => moxios.uninstall(DeadOrAlive.axios));
 
     it('should make a network request', (done) => {
-        let output = DeadOrAlive._private.getEntityIds("search term");
+        const output = DeadOrAlive._private.getEntityIds("search term");
         moxios.wait(async () => {
             expect(moxios.requests.count()).to.be.equal(1);
             done();
