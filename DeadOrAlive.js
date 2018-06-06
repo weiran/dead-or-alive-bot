@@ -44,7 +44,7 @@ const getEntity = async (entityId) => {
 
 const getEntities = entityIds => Promise.all(entityIds.map(entityId => getEntity(entityId)));
 
-const getFirstHumanEntity = async (entities) => {
+const getFirstHumanEntity = (entities) => {
     const personEntity = entities.find((entity) => {
         if (entity.claims.P31 === undefined) return null;
         const instanceOfValue = entity.claims.P31[0].mainsnak.datavalue.value.id;
@@ -119,13 +119,11 @@ const search = async (searchTerm) => {
     // search for override terms first
     const overrideModel =
         overrides.find(override => searchTerm.toLowerCase() === override.overrideSearchTerm);
-    if (overrideModel) {
-        return getResultModel(overrideModel);
-    }
+    if (overrideModel) return getResultModel(overrideModel);
 
     const entityIds = await getEntityIds(searchTerm);
     const entities = await getEntities(entityIds);
-    const personEntity = await getFirstHumanEntity(entities);
+    const personEntity = getFirstHumanEntity(entities);
     const wikipediaModel = await getWikipediaModel(personEntity);
     return getResultModel(wikipediaModel);
 };
@@ -138,6 +136,7 @@ module.exports = {
         getEntity,
         getEntityIds,
         getFirstHumanEntity,
+        getWikipediaModel,
         getResultModel
     },
 };
