@@ -56,14 +56,14 @@ const getFirstHumanEntity = (entities) => {
     return personEntity;
 };
 
-const getWikipediaModel = (personEntity) => {
+const getPersonModel = (personEntity) => {
     const {
         P569: birthData,
         P570: deathData
     } = personEntity.claims;
 
     const name = personEntity.labels.en.value;
-    const wikipediaUrl = parseWikipediaUrl(personEntity.sitelinks.enwiki.title);
+    const url = parseWikipediaUrl(personEntity.sitelinks.enwiki.title);
     const hasDOB = birthData !== undefined;
     const isDead = deathData !== undefined;
 
@@ -83,33 +83,33 @@ const getWikipediaModel = (personEntity) => {
         name,
         dateOfBirth,
         dateOfDeath,
-        wikipediaUrl
+        url
     };
 };
 
-const getResultModel = (wikipediaModel) => {
-    const hasDOB = wikipediaModel.dateOfBirth !== null;
-    const isDead = wikipediaModel.dateOfDeath !== null;
+const getResultModel = (personModel) => {
+    const hasDOB = personModel.dateOfBirth !== null;
+    const isDead = personModel.dateOfDeath !== null;
     let age;
     let dateOfDeathFormatted = null;
 
     if (hasDOB) {
-        const dateOfBirth = moment(wikipediaModel.dateOfBirth);
+        const dateOfBirth = moment(personModel.dateOfBirth);
         age = moment().diff(dateOfBirth, 'years');
         if (isDead) {
-            const dateOfDeath = moment(wikipediaModel.dateOfDeath);
+            const dateOfDeath = moment(personModel.dateOfDeath);
             age = dateOfDeath.diff(dateOfBirth, 'years');
             dateOfDeathFormatted = dateOfDeath.format(DefaultDateFormat);
         }
     }
 
     return {
-        name: wikipediaModel.name,
+        name: personModel.name,
         age,
         hasDOB,
         isDead,
         dateOfDeath: dateOfDeathFormatted,
-        wikipediaUrl: wikipediaModel.wikipediaUrl
+        url: personModel.url
     };
 };
 
@@ -122,7 +122,7 @@ const search = async (searchTerm) => {
     const entityIds = await getEntityIds(searchTerm);
     const entities = await getEntities(entityIds);
     const personEntity = getFirstHumanEntity(entities);
-    const wikipediaModel = getWikipediaModel(personEntity);
+    const wikipediaModel = getPersonModel(personEntity);
     return getResultModel(wikipediaModel);
 };
 
@@ -134,7 +134,7 @@ module.exports = {
         getEntity,
         getEntityIds,
         getFirstHumanEntity,
-        getWikipediaModel,
+        getPersonModel,
         getResultModel
     },
 };

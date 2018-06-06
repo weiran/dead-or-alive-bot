@@ -157,32 +157,32 @@ describe('getFirstHumanEntity', () => {
     });
 });
 
-describe('getWikipediaModel', () => {
+describe('getPersonModel', () => {
     before(async () => {
-        const file = await fs.readFile('./tests/getWikipediaModelInput.json');
-        wikipediaModelInput = JSON.parse(file);
+        const file = await fs.readFile('./tests/getPersonModelInput.json');
+        personModelInput = JSON.parse(file);
     });
 
-    let wikipediaModelInput;
+    let personModelInput;
 
-    it('should return wikipedia model given valid input', () => {
-        const wikipediaModel = DeadOrAlive._private.getWikipediaModel(wikipediaModelInput);
-        expect(wikipediaModel.name).to.be.equal('John Lennon');
-        expect(wikipediaModel.dateOfBirth.getTime()).to.be.equal(new Date(Date.UTC(1975, 2, 17)).getTime());
-        expect(wikipediaModel.dateOfDeath.getTime()).to.be.equal(new Date(Date.UTC(2009, 2, 13)).getTime());
-        expect(wikipediaModel.wikipediaUrl).to.be.equal('https://en.wikipedia.org/wiki/John_Lennon');
+    it('should return person model given valid input', () => {
+        const personModel = DeadOrAlive._private.getPersonModel(personModelInput);
+        expect(personModel.name).to.be.equal('John Lennon');
+        expect(personModel.dateOfBirth.getTime()).to.be.equal(new Date(Date.UTC(1975, 2, 17)).getTime());
+        expect(personModel.dateOfDeath.getTime()).to.be.equal(new Date(Date.UTC(2009, 2, 13)).getTime());
+        expect(personModel.url).to.be.equal('https://en.wikipedia.org/wiki/John_Lennon');
     });
 
-    it('should return wikipedia model with missing dates given partially valid input', () => {
-        const wikipediaModelInputWithoutDates = wikipediaModelInput;
-        delete wikipediaModelInputWithoutDates.claims.P569;
-        delete wikipediaModelInputWithoutDates.claims.P570;
+    it('should return person model with missing dates given partially valid input', () => {
+        const personModelInputWithoutDates = personModelInput;
+        delete personModelInputWithoutDates.claims.P569;
+        delete personModelInputWithoutDates.claims.P570;
 
-        const wikipediaModel = DeadOrAlive._private.getWikipediaModel(wikipediaModelInputWithoutDates);
-        expect(wikipediaModel.name).to.be.equal('John Lennon');
-        expect(wikipediaModel.dateOfBirth).to.be.equal(null);
-        expect(wikipediaModel.dateOfDeath).to.be.equal(null);
-        expect(wikipediaModel.wikipediaUrl).to.be.equal('https://en.wikipedia.org/wiki/John_Lennon');
+        const personModel = DeadOrAlive._private.getPersonModel(personModelInputWithoutDates);
+        expect(personModel.name).to.be.equal('John Lennon');
+        expect(personModel.dateOfBirth).to.be.equal(null);
+        expect(personModel.dateOfDeath).to.be.equal(null);
+        expect(personModel.url).to.be.equal('https://en.wikipedia.org/wiki/John_Lennon');
     });
 });
 
@@ -191,7 +191,7 @@ describe('getResultModel', () => {
         name: 'John Lennon',
         dateOfBirth: new Date(Date.UTC(1975, 2, 17)),
         dateOfDeath: new Date(Date.UTC(2009, 2, 13)),
-        wikipediaUrl: 'https://en.wikipedia.org/wiki/John_Lennon'
+        url: 'https://en.wikipedia.org/wiki/John_Lennon'
     };
 
     it('should return result model with correct age given birth and death dates exist', () => {
@@ -225,7 +225,12 @@ describe('getResultModel', () => {
 
     it('should copy the right values into the result model', () => {
         const resultModel = DeadOrAlive._private.getResultModel(resultModelInput);
-        expect(resultModel.name, 'John Lennon');
-        expect(resultModel.wikipediaUrl, 'https://en.wikipedia.org/wiki/John_Lennon');
+        expect(resultModel.name).to.be.equal('John Lennon');
+        expect(resultModel.url).to.be.equal('https://en.wikipedia.org/wiki/John_Lennon');
     })
+});
+
+
+describe('search', () => {
+
 });
