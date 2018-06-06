@@ -1,7 +1,7 @@
 {
     "labels": {
         "en": {
-            "value": "John Lenon"
+            "value": "John Lennon"
         }
     },
     "claims": {
@@ -41,7 +41,7 @@
     },
     "sitelinks": {
         "enwiki": {
-            "title": "John Lenon"
+            "title": "John Lennon"
         }
     }
 }
