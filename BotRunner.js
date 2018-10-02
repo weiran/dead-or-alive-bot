@@ -9,6 +9,28 @@ const parseTextFromCommand = (text, commandOffset) => {
     };
 };
 
+const buildResponse = searchTerm => new Promise(async (resolve) => {
+    try {
+        const result = await DeadOrAlive.search(searchTerm);
+
+        if (result.customMessage) {
+            return resolve(result.customMessage);
+        }
+
+        if (result.isDead) {
+            return resolve(`[${result.name}](${result.url}) died${result.hasDOB ? ` aged ${result.age}` : ''} on ${result.dateOfDeath}.`);
+        }
+
+        return resolve(`[${result.name}](${result.url}) is alive${result.hasDOB ? ` and kicking at ${result.age} years old` : ''}.`);
+    } catch (e) {
+        if (e.message === 'not-found') {
+            return resolve(`Couldn't find a person named ${searchTerm}.`);
+        }
+
+        return resolve(e.message);
+    }
+});
+
 const textReceived = async (context) => {
     const message = context.message;
     let searchTerm = message.text;
@@ -29,27 +51,7 @@ const textReceived = async (context) => {
         }
     }
 
-    // build response
-    let response = `Couldn't find a person named ${searchTerm}.`;
-    try {
-        const result = await DeadOrAlive.search(searchTerm);
-        switch (result.isDead) {
-        case true:
-            response = `[${result.name}](${result.url}) died${result.hasDOB ? ` aged ${result.age}` : ''} on ${result.dateOfDeath}.`;
-            break;
-        case false:
-            response = `[${result.name}](${result.url}) is alive${result.hasDOB ? ` and kicking at ${result.age} years old` : ''}.`;
-            break;
-        default:
-        }
-    } catch (e) {
-        switch (e.message) {
-        case 'not-found':
-            break;
-        default:
-            response = e.message;
-        }
-    }
+    const response = await buildResponse(searchTerm);
 
     context.replyWithMarkdown(response);
 };
@@ -57,6 +59,7 @@ const textReceived = async (context) => {
 module.exports = {
     textReceived,
     _private: {
+        buildResponse,
         parseTextFromCommand
     }
 };
