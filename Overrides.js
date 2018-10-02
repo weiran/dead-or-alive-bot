@@ -5,6 +5,7 @@ module.exports = [{
         'our lord and saviour'
     ],
     name: 'Harambe the gorilla',
+    customMessage: '[Harambe](https://en.wikipedia.org/wiki/Killing_of_Harambe) 🐒 died 💀 for 😢 our sins 🙏',
     dateOfBirth: new Date(1999, 4, 27),
     dateOfDeath: new Date(2016, 4, 28),
     url: 'https://en.wikipedia.org/wiki/Killing_of_Harambe'
