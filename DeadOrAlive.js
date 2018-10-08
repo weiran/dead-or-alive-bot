@@ -90,6 +90,7 @@ const getPersonModel = (personEntity) => {
 const getResultModel = (personModel) => {
     const hasDOB = personModel.dateOfBirth !== null;
     const isDead = personModel.dateOfDeath !== null;
+    const { customMessage } = personModel;
     let age;
     let dateOfDeathFormatted = null;
 
@@ -109,14 +110,23 @@ const getResultModel = (personModel) => {
         hasDOB,
         isDead,
         dateOfDeath: dateOfDeathFormatted,
-        url: personModel.url
+        url: personModel.url,
+        customMessage,
     };
+};
+
+const matchSearchToOverride = (arrayOrString, searchTerm) => {
+    if (typeof arrayOrString !== 'object') {
+        return arrayOrString === searchTerm;
+    }
+
+    return arrayOrString.find(x => x === searchTerm);
 };
 
 const search = async (searchTerm) => {
     // search for override terms first
     const overrideModel =
-        overrides.find(override => searchTerm.toLowerCase() === override.overrideSearchTerm);
+        overrides.find(override => matchSearchToOverride(override.overrideSearchTerm, searchTerm));
     if (overrideModel) return getResultModel(overrideModel);
 
     const entityIds = await getEntityIds(searchTerm);
@@ -129,12 +139,13 @@ const search = async (searchTerm) => {
 module.exports = {
     search,
     _private: {
-        parseWikipediaUrl,
         getEntities,
         getEntity,
         getEntityIds,
         getFirstHumanEntity,
         getPersonModel,
-        getResultModel
+        getResultModel,
+        matchSearchToOverride,
+        parseWikipediaUrl
     },
 };
