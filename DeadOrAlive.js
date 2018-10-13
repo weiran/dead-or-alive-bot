@@ -126,7 +126,10 @@ const matchSearchToOverride = (arrayOrString, searchTerm) => {
 const search = async (searchTerm) => {
     // search for override terms first
     const overrideModel =
-        overrides.find(override => matchSearchToOverride(override.overrideSearchTerm, searchTerm));
+        overrides.find(override =>
+            matchSearchToOverride(override.overrideSearchTerm, searchTerm.toLowerCase())
+        );
+
     if (overrideModel) return getResultModel(overrideModel);
 
     const entityIds = await getEntityIds(searchTerm);
