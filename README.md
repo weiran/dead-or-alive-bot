@@ -64,3 +64,11 @@ Then run either:
     Deploy with your bot token as an environment variable:
     now -e BOT_TOKEN='1234567:AAGdsf08sg9897fsdD89fsD'
 </details>
+
+---
+<p align="center">
+  <b>By Weiran Zhang</b><br>
+  <a href="https://weiran.co">Website</a> |
+  <a href="https://twitter.com/weiran">Twitter</a> |
+  <a href="https://github.com/weiran">GitHub</a>
+</p>
