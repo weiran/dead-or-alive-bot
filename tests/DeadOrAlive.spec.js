@@ -207,7 +207,7 @@ describe('getResultModel', () => {
         resultModelInputWithoutDeath.dateOfDeath = null;
         const resultModel = DeadOrAlive._private.getResultModel(resultModelInputWithoutDeath);
         // TODO: inject a date for 'today' to calculate age statically
-        expect(resultModel.age).to.be.equal(43);
+        expect(resultModel.age).to.be.equal(44);
         expect(resultModel.hasDOB).to.be.equal(true);
         expect(resultModel.isDead).to.be.equal(false);
         expect(resultModel.dateOfDeath).to.be.equal(null);
