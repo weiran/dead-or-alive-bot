@@ -4,6 +4,7 @@ const moment = require('moment');
 const wiki = require('wikidata-sdk');
 
 const overrides = require('./Overrides');
+const { WIKIDATA_ERROR } = require('./constants');
 
 const WikiDataDateFormat = "'+'YYYY-MM-DD'T'hh:mm:ss'Z'";
 const DefaultDateFormat = 'MMMM Do YYYY';
@@ -29,8 +30,14 @@ const getEntityIds = async (searchTerm) => {
         search: searchTerm,
         format: 'json',
     });
+
     const searchResult = await axios.get(url);
-    if (searchResult.data.search.length === 0) {
+
+    if (searchResult.data.error) {
+        throw new Error(WIKIDATA_ERROR);
+    }
+
+    if (!searchResult.data.search || searchResult.data.search.length === 0) {
         throw new Error('not-found');
     }
     return searchResult.data.search.map(entity => entity.id).slice(0, 5);
