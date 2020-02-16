@@ -15,23 +15,23 @@
   "author": "Weiran Zhang",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.18.0",
-    "dotenv": "^8.0.0",
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0",
     "micro-bot": "^2.5.3",
     "moment": "^2.24.0",
-    "qs": "^6.7.0",
-    "telegraf": "^3.29.0",
-    "wikidata-sdk": "^6.7.0"
+    "qs": "^6.9.1",
+    "telegraf": "^3.36.0",
+    "wikidata-sdk": "^7.2.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.17.3",
-    "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.13.0",
-    "fs-extra": "^8.0.1",
-    "mocha": "^6.1.4",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.18.3",
+    "fs-extra": "^8.1.0",
+    "mocha": "^7.0.1",
     "moxios": "^0.4.0"
   }
 }
