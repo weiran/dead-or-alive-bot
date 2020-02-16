@@ -15,7 +15,7 @@
   "author": "Weiran Zhang",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "dotenv": "^8.0.0",
     "micro-bot": "^2.5.3",
     "moment": "^2.24.0",
