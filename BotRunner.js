@@ -1,3 +1,4 @@
+const { WIKIDATA_ERROR } = require('./constants');
 const DeadOrAlive = require('./DeadOrAlive');
 
 const parseTextFromCommand = (text, commandOffset) => {
@@ -25,6 +26,10 @@ const buildResponse = searchTerm => new Promise(async (resolve) => {
     } catch (e) {
         if (e.message === 'not-found') {
             return resolve(`Couldn't find a person named ${searchTerm}.`);
+        }
+
+        if (e.message === WIKIDATA_ERROR) {
+            return resolve(`Oops! The bot seems to be having issues - please open an issue at https://github.com/weiran/dead-or-alive-bot/issues (include your search term) and I'll take a look 👀😁`);
         }
 
         return resolve(e.message);
