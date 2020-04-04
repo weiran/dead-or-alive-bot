@@ -1,8 +1,7 @@
 require('dotenv').config();
-const { Composer } = require('micro-bot');
+const Telegraf = require('telegraf');
 const BotRunner = require('./BotRunner');
 
-const bot = new Composer();
+const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.on('text', BotRunner.textReceived);
-
-module.exports = bot;
+bot.startPolling();
