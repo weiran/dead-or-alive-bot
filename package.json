@@ -10,7 +10,7 @@
     "test": "mocha tests/."
   },
   "engines": {
-    "node": "8.2.1"
+    "node": "12.x"
   },
   "author": "Weiran Zhang",
   "license": "ISC",
