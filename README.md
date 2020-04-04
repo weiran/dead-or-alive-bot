@@ -9,10 +9,9 @@
 
 A Telegram bot that searches Wikipedia (via WikiData) for people and informs you if they're dead or alive. Inspired by [@roguehousewife](https://twitter.com/roguehousewife)'s inability to remember if any celebrity is dead or alive.
 
-Thanks to [@JonShort](https://github.com/JonShort) for the logo.
+Thanks to [@JonShort](https://github.com/JonShort) for the logo and code.
 
 Known as [@dead_or_alive_bot](http://t.me/dead_or_alive_bot) on Telegram.
-
 
 ## Usage
 
@@ -39,7 +38,7 @@ BOT_TOKEN_DEV=1234567:AAGdsf08sg9897fsdD89fsD
 Then run either:
 - `npm run debug` - debug the bot locally.
 - `npm run start` - run the bot in production.
-> note - production requires the `NOW_URL` env var to be configured
+> note - production requires the `BOT_URL` env var to be configured
 
 ## FAQ
 
@@ -53,16 +52,6 @@ Then run either:
     If you're getting 401 responses, usually this is fixed by trashing the old token and using the fresh one generated.
 
     > note - bot tokens can be managed by running the command `/mybots` within botfather.
-</details>
-
-
-<details>
-    <summary>
-        I want to deploy to now
-    </summary>
-    
-    Deploy with your bot token as an environment variable:
-    now -e BOT_TOKEN='1234567:AAGdsf08sg9897fsdD89fsD'
 </details>
 
 ---
