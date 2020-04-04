@@ -4,7 +4,7 @@
   "description": "Telegram bot that tells you whether someone is dead or alive.",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
+    "start": "micro-bot -d ${BOT_URL}",
     "debug": "node index-debug",
     "lint": "eslint ./",
     "test": "mocha tests/."
