@@ -40,7 +40,7 @@ const getEntityIds = async (searchTerm) => {
     if (!searchResult.data.search || searchResult.data.search.length === 0) {
         throw new Error('not-found');
     }
-    return searchResult.data.search.map(entity => entity.id).slice(0, 5);
+    return searchResult.data.search.map((entity) => entity.id).slice(0, 5);
 };
 
 const getEntity = async (entityId) => {
@@ -49,7 +49,7 @@ const getEntity = async (entityId) => {
     return result.data.entities[entityId];
 };
 
-const getEntities = entityIds => Promise.all(entityIds.map(entityId => getEntity(entityId)));
+const getEntities = (entityIds) => Promise.all(entityIds.map((entityId) => getEntity(entityId)));
 
 const getFirstHumanEntity = (entities) => {
     const personEntity = entities.find((entity) => {
@@ -127,15 +127,14 @@ const matchSearchToOverride = (arrayOrString, searchTerm) => {
         return arrayOrString === searchTerm;
     }
 
-    return arrayOrString.find(x => x === searchTerm);
+    return arrayOrString.find((x) => x === searchTerm);
 };
 
 const search = async (searchTerm) => {
     // search for override terms first
-    const overrideModel =
-        overrides.find(override =>
-            matchSearchToOverride(override.overrideSearchTerm, searchTerm.toLowerCase())
-        );
+    const overrideModel = overrides.find(
+        (override) => matchSearchToOverride(override.overrideSearchTerm, searchTerm.toLowerCase())
+    );
 
     if (overrideModel) return getResultModel(overrideModel);
 
