@@ -10,7 +10,7 @@ const parseTextFromCommand = (text, commandOffset) => {
     };
 };
 
-const buildResponse = (searchTerm) => async () => {
+const buildResponse = async (searchTerm) => {
     try {
         const result = await DeadOrAlive.search(searchTerm);
 
