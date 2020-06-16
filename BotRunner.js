@@ -10,34 +10,34 @@ const parseTextFromCommand = (text, commandOffset) => {
     };
 };
 
-const buildResponse = searchTerm => new Promise(async (resolve) => {
+const buildResponse = async (searchTerm) => {
     try {
         const result = await DeadOrAlive.search(searchTerm);
 
         if (result.customMessage) {
-            return resolve(result.customMessage);
+            return result.customMessage;
         }
 
         if (result.isDead) {
-            return resolve(`[${result.name}](${result.url}) died${result.hasDOB ? ` aged ${result.age}` : ''} on ${result.dateOfDeath}.`);
+            return `[${result.name}](${result.url}) died${result.hasDOB ? ` aged ${result.age}` : ''} on ${result.dateOfDeath}.`;
         }
 
-        return resolve(`[${result.name}](${result.url}) is alive${result.hasDOB ? ` and kicking at ${result.age} years old` : ''}.`);
+        return `[${result.name}](${result.url}) is alive${result.hasDOB ? ` and kicking at ${result.age} years old` : ''}.`;
     } catch (e) {
         if (e.message === 'not-found') {
-            return resolve(`Couldn't find a person named ${searchTerm}.`);
+            return `Couldn't find a person named ${searchTerm}.`;
         }
 
         if (e.message === WIKIDATA_ERROR) {
-            return resolve(`Oops! The bot seems to be having issues - please open an issue at https://github.com/weiran/dead-or-alive-bot/issues (include your search term) and I'll take a look 👀😁`);
+            return "Oops! The bot seems to be having issues - please open an issue at https://github.com/weiran/dead-or-alive-bot/issues (include your search term) and I'll take a look 👀😁";
         }
 
-        return resolve(e.message);
+        return e.message;
     }
-});
+};
 
 const textReceived = async (context) => {
-    const message = context.message;
+    const { message } = context;
     let searchTerm = message.text;
 
     // parse command and input text
