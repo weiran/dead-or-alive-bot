@@ -18,7 +18,7 @@
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "micro-bot": "^2.5.3",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "qs": "^6.9.3",
     "telegraf": "^3.37.0",
     "wikidata-sdk": "^7.2.0"
