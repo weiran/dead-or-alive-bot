@@ -1,0 +1,13 @@
+# fly.toml file generated for dead-or-alive-bot on 2022-08-27T08:53:46+01:00
+
+app = "dead-or-alive-bot"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[build]
+  builtin = "node"
+
+[experimental]
+  allowed_public_ports = []
+  auto_rollback = true
