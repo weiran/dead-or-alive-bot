@@ -56,6 +56,9 @@ const textReceived = async (context) => {
         }
     }
 
+    // eslint-disable-next-line no-console
+    console.log(`Querying '${searchTerm}'`);
+
     const response = await buildResponse(searchTerm);
 
     context.replyWithMarkdown(response);
