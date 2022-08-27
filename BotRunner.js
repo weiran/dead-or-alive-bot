@@ -1,5 +1,4 @@
 const { WIKIDATA_ERROR } = require('./constants');
-const { search } = require('./DeadOrAlive');
 const DeadOrAlive = require('./DeadOrAlive');
 
 const parseTextFromCommand = (text, commandOffset) => {
