@@ -1,13 +1,15 @@
-# fly.toml file generated for dead-or-alive-bot on 2022-08-27T08:53:46+01:00
+# fly.toml app configuration file generated for dead-or-alive-bot on 2023-06-17T09:44:26+01:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
 app = "dead-or-alive-bot"
+primary_region = "lhr"
 kill_signal = "SIGINT"
-kill_timeout = 5
-processes = []
+kill_timeout = "5s"
+
+[experimental]
+  auto_rollback = true
 
 [build]
   builtin = "node"
-
-[experimental]
-  allowed_public_ports = []
-  auto_rollback = true
