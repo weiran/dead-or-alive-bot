@@ -2,6 +2,7 @@ const { describe, it } = require('mocha');
 const chai = require('chai');
 const moxios = require('moxios');
 const fs = require('fs-extra');
+const moment = require('moment');
 const DeadOrAlive = require('./../DeadOrAlive');
 
 const expect = chai.expect;
@@ -206,8 +207,8 @@ describe('getResultModel', () => {
         let resultModelInputWithoutDeath = Object.assign({}, resultModelInput);;
         resultModelInputWithoutDeath.dateOfDeath = null;
         const resultModel = DeadOrAlive._private.getResultModel(resultModelInputWithoutDeath);
-        // TODO: inject a date for 'today' to calculate age statically
-        expect(resultModel.age).to.be.equal(47);
+        const expectedAge = moment().diff(moment(resultModelInputWithoutDeath.dateOfBirth), 'years');
+        expect(resultModel.age).to.be.equal(expectedAge);
         expect(resultModel.hasDOB).to.be.equal(true);
         expect(resultModel.isDead).to.be.equal(false);
         expect(resultModel.dateOfDeath).to.be.equal(null);

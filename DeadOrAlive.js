@@ -2,6 +2,7 @@ const axios = require('axios');
 const qs = require('qs');
 const moment = require('moment');
 const wiki = require('wikidata-sdk');
+const pkg = require('./package.json');
 
 const overrides = require('./Overrides');
 const { WIKIDATA_ERROR } = require('./constants');
@@ -9,7 +10,21 @@ const { WIKIDATA_ERROR } = require('./constants');
 const WikiDataDateFormat = "'+'YYYY-MM-DD'T'hh:mm:ss'Z'";
 const DefaultDateFormat = 'MMMM Do YYYY';
 
-axios.interceptors.request.use((request) => {
+const getWikimediaUserAgent = () => (
+    process.env.WIKIMEDIA_USER_AGENT
+    || `${pkg.name}/${pkg.version} (+https://github.com/weiran/dead-or-alive-bot)`
+);
+
+const http = axios.create({
+    headers: {
+        // Wikimedia APIs may block generic User-Agents (e.g. axios/*); provide an identifying UA.
+        'User-Agent': getWikimediaUserAgent(),
+        // Some Wikimedia endpoints prefer this header name.
+        'Api-User-Agent': getWikimediaUserAgent(),
+    },
+});
+
+http.interceptors.request.use((request) => {
     if (request.method === 'post' && request.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
         request.data = qs.stringify(request.data);
     }
@@ -31,7 +46,7 @@ const getEntityIds = async (searchTerm) => {
         format: 'json',
     });
 
-    const searchResult = await axios.get(url);
+    const searchResult = await http.get(url);
 
     if (searchResult.data.error) {
         throw new Error(WIKIDATA_ERROR);
@@ -45,7 +60,7 @@ const getEntityIds = async (searchTerm) => {
 
 const getEntity = async (entityId) => {
     const entityUrl = wiki.getEntities(entityId);
-    const result = await axios.get(entityUrl);
+    const result = await http.get(entityUrl);
     return result.data.entities[entityId];
 };
 
@@ -147,6 +162,7 @@ const search = async (searchTerm) => {
 
 module.exports = {
     search,
+    axios: http,
     _private: {
         getEntities,
         getEntity,
@@ -155,6 +171,7 @@ module.exports = {
         getPersonModel,
         getResultModel,
         matchSearchToOverride,
-        parseWikipediaUrl
+        parseWikipediaUrl,
+        getWikimediaUserAgent,
     },
 };

@@ -32,6 +32,10 @@ const buildResponse = async (searchTerm) => {
             return "Oops! The bot seems to be having issues - please open an issue at https://github.com/weiran/dead-or-alive-bot/issues (include your search term) and I'll take a look 👀😁";
         }
 
+        if (e.response && e.response.status === 403) {
+            return 'Upstream request was blocked (403). If you run this bot, set a descriptive `WIKIMEDIA_USER_AGENT` env var per Wikimedia API policy.';
+        }
+
         return e.message;
     }
 };

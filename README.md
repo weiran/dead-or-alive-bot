@@ -35,6 +35,11 @@ BOT_TOKEN_DEV=1234567:AAGdsf08sg9897fsdD89fsD
 
 2. Or set `BOT_TOKEN_DEV` as environment variables.
 
+Wikimedia APIs also require a descriptive User-Agent. Set:
+```
+WIKIMEDIA_USER_AGENT=dead-or-alive-bot/1.0 (+https://github.com/weiran/dead-or-alive-bot; you@example.com)
+```
+
 Then run either:
 - `npm run debug` - debug the bot locally.
 - `npm run start` - run the bot in production.
