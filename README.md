@@ -45,6 +45,24 @@ Then run either:
 - `npm run start` - run the bot in production.
 > note - production requires the `BOT_URL` env var to be configured
 
+## Telegram Serverless
+
+This branch also includes a Telegram Serverless implementation in `handlers/`,
+`lib/`, and `schema.js`. Runtime code there must import only Telegram's `sdk`
+and local bare modules; npm packages are not available on Telegram's runtime.
+
+To link and test a Serverless bot:
+
+```
+npm install
+npx tgcloud login
+npx tgcloud run handlers/message '{ chat: { id: 1 }, text: "John Lennon" }'
+npx tgcloud push
+```
+
+`tgcloud login` requires the Serverless CLI access token from BotFather, not the
+regular Bot API token.
+
 ## FAQ
 
 <details>

@@ -6,6 +6,9 @@
   "scripts": {
     "start": "micro-bot -d ${BOT_URL}",
     "debug": "node index-debug",
+    "tgcloud:deploy": "tgcloud push",
+    "tgcloud:status": "tgcloud status",
+    "tgcloud:run": "tgcloud run",
     "lint": "eslint ./",
     "test": "mocha tests/."
   },
@@ -24,6 +27,7 @@
     "wikidata-sdk": "^8.0.3"
   },
   "devDependencies": {
+    "@tgcloud/cli": "^0.1.2",
     "chai": "^4.3.6",
     "eslint": "^8.23.0",
     "eslint-config-airbnb-base": "^15.0.0",
